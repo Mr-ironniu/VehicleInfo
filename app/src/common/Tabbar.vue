@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="z-index:1001;">
         <van-tabbar route>
             <van-tabbar-item replace to="/home/map" icon="home-o">
                 首页
