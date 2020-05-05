@@ -1,42 +1,181 @@
 <template>
     <div>
-        <div class="publish">
-            <img  src="../../../assets/xiangji.png" alt="">
+        <div class="message" ref="wrapper">
+            <div class="content">
+                <div class="touxiang">
+                    <div class="touxiang-name">yjj1</div>
+                    <img src="../../..//assets/feya.jpg" alt="">
+                </div>
+                <img  class="header" src="../../..//assets/fengmian.jpg" alt="">
+                <div class="center">
+                    <div class="item">
+                        <div class="tx-left">
+                            <img src="../../..//assets/feya.jpg" alt="">
+                        </div>
+                        <div class="text-right">
+                            <div class="text-name">yjj1</div>
+                            <div class="text-content">动态内容</div>
+                            <i>评论按钮</i>
+                            <div class="comments">
+                                
+                                评论内容
+                            </div>
+                        </div>
+                        <van-divider />
+                    </div>
+                </div>
+                <van-form @submit="onSubmit">
+                    <van-field name="data" label="文件上传">
+                        <template #input>
+                            <van-uploader v-model="data"   :after-read="afterRead"/>
+                        </template>
+                    </van-field>
+                     <div style="margin: 16px;">
+                        <van-button round block type="info" native-type="submit">
+                        提交
+                        </van-button>
+                    </div>
+                </van-form>
+                
+            </div>
+            <img class="publish " src="../../../assets/xiangji2.png" alt="">
         </div>
     </div>
 </template>
 
 <script>
+import Bscroll from 'better-scroll';
 export default {
     name:'message',
-     data() {
-        return {
-        loading: true,
-        };
+    data(){
+        return{
+            data:[
+               {url:'https://img.yzcdn.cn/vant/leaf.jpg'},
+
+            ],
+            active:''
+        }
     },
-    mounted() {
-        this.loading = false;
+    mounth(){
+        this.scroll = new Bscroll(this.$refs.wrapper);
     },
+    methods:{
+        onSubmit(val){
+            console.log(val);
+            
+        },
+        afterRead(file){
+            console.log(file);            
+        }
+    }
+    
 }
 </script>
 
 <style  scoped>
+.message{
+    overflow: hidden;
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+/* .publish{
+    
+    height: 30px;
+    width: 30px;
+    
+    margin: auto;
+} */
 .publish{
-    height: 40px;
-    width:40px;
+    height:25px;
+    width: 25px;
     position: fixed;
-    right:0;
+    right: 5px;
+    top:5px;
+    margin: auto;
+    z-index: 1001;
+}
+.touxiang{
+    height:60px;
+    border-radius: 8px;
+    display: inline-block;
+    position: absolute;
+    right:5%;
+    top: 155px;
+    margin: auto;
+    z-index: 1000;
+}
+.touxiang-name{
+    display: inline-block;
+    height:20px;
+    line-height:20px;
+    font-size: 14px;
+    font-weight: 550;
+    color:#fff;
+    position: absolute;
+    padding-right: 65px;
+    right:1000%;
+    z-index: 1001;
+}
+.touxiang img{
+    width: 60px;
+    height:60px;
+    border-radius: 8px;
+    position: absolute;
+    right:5%;
+    z-index: 1000;
+}
+.content{
+    background-color: #fff;
+    height: 1000px;
+}
+.center{
+    background-color: #fff;
+    width: 100%;
+    position: relative;
+    margin-top:40px;
+    height:330px;
+}
+.header{
+    position: relative;
+    height: 200px;
+    width: 100%;
+}
+.item{
+    position: relative;
+    width:100%;
+    height:200px;
+}
+.tx-left{
+    width:10%;
+    height:100%;
+    display: inline-block;
+    position: relative;
+    background-color: red;
+}
+.tx-left img{
+    width:30px;
+    height:30px;
+    border-radius: 2px;
+    position: absolute;
     top:0;
+    right:0;
+    left: 0;
     margin: auto;
 }
-.publish img{
-    height:25px;
-    width:25px;
+.text-right{
+    display: inline-block;
     position: absolute;
+    background-color: green;
+    height:100%;
+    width: 90%;
     top: 0;
-    bottom: 0;
     right:0;
-    left:0;
-    margin: auto;
+    margin:auto;
+}
+.text-name{
+    color:  #0088CC;
+    font-size: 16px;
+    font-weight: 700;
 }
 </style>
