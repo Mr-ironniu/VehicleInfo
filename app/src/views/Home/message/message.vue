@@ -14,11 +14,15 @@
                         </div>
                         <div class="text-right">
                             <div class="text-name">yjj1</div>
-                            <div class="text-content">动态内容</div>
-                            <i>评论按钮</i>
+                            <div class="text-content">动态内容煞风景啊是大家佛为佛i女i啊士大夫w阿斯顿佛i围殴妇女</div>
+                            <div  class="text-pingluicon">
+                                <van-icon class="text-icon" name="eye-o" />
+                                <div style="height:22px;display:inline-block;line-height:22px;font-size:15px;">20</div>
+                                <van-icon class="text-icon" name="ellipsis" />
+                            </div>
+                            
                             <div class="comments">
                                 
-                                评论内容
                             </div>
                         </div>
                         <van-divider />
@@ -166,7 +170,7 @@ export default {
 .text-right{
     display: inline-block;
     position: absolute;
-    background-color: green;
+    /* background-color: green; */
     height:100%;
     width: 90%;
     top: 0;
@@ -177,5 +181,22 @@ export default {
     color:  #0088CC;
     font-size: 16px;
     font-weight: 700;
+}
+.text-content{
+    width: 90%;
+}
+.text-pingluicon{
+    position: absolute;
+    right:5%;
+}
+.text-icon{
+    /* position: absolute; */
+    display: inline-block;
+    background-color: #f4f4f4;
+    margin: 0 4px;
+    height:20px;
+    text-align: center;
+    line-height: 20px;
+    /* font-size:15px; */
 }
 </style>
