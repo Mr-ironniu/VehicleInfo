@@ -55,9 +55,13 @@ export default {
       UserLogin(value).then(res =>{
         this.$toast.clear();
         if(res.msg == '登录成功'){
+          console.log(res.obj.id);          
           this.$toast.success("登录成功")
           this.$router.push({
-                    name: 'map'
+                    name: 'message',
+                    params: {
+                      obj: res.obj
+                    }
                 }) 
         } else{
           this.$toast.fail(res.msg);

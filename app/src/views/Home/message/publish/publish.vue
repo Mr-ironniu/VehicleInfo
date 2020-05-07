@@ -3,34 +3,47 @@
         <van-nav-bar
             title="发布动态"
             left-text="返回"
+            right-text="发布"
             left-arrow
             @click-left="onClickLeft"
-            @click-right="onClickRight"/>
+            @click-right="onClickRight()"/>
         <div class="content">
             <van-field
-                v-model="message"
+                v-model="content"
                 rows="4"
                 autosize
                 type="textarea"
                 placeholder="这一刻的想法..."/>
-            <div class="content-fujian">
-                
-            </div>
+            <van-field left-icon="location-o" :label='location' @click="Getlocation"  disabled />
+            <div></div>
+             <!-- <div class="content-location" @click="Quit">当前所在位置</div> -->
         </div>
     </div>
 </template>
 
 <script>
-
+import {ShareMood} from '../../../../api/axios'
 export default {
     data(){
         return{
-            data:[],
-            active:''
+            content:'',
+            data:{
+                title:'132',
+                userId:134,
+                content:'',
+                location:''
+            },
+            active:'',
+            data1:'',
+            location:'',
         }
     },
-    mounth(){
-      
+    created(){
+    },
+    mounted(){
+        this.location = '所在位置';
+        this.getdata()
+        if(!this.data.userId)this.data.userId = this.$route.params.userId;
     },
     methods:{
         onClickLeft(){
@@ -39,10 +52,39 @@ export default {
                 }) 
         },
         onClickRight(){
-            console.log(123);            
+            this.data.content = this.content;
+            this.data.location = this.location;
+            console.log(this.data);
+            
+            ShareMood(this.data).then(res =>{
+                if(res.msg == '新增动态成功'){         
+                    this.$toast.success("发表成功")
+                    this.$router.push({
+                            name: 'message',
+                            params: {
+                                content: this.data.content
+                            }
+                        }) 
+                } else{
+                    this.$toast.fail(res.msg);
+                } 
+            })          
         },
-        publish(){
-            console.log(123);
+        getdata(){
+            if(!this.$route.params.location)return;
+            this.location = this.$route.params.location         
+        },
+        // publish(){
+        //     console.log(123);
+        // },
+        onCancel() {
+            this.show = false;
+            this.$toast('cancel');
+        },
+        Getlocation(){
+            this.$router.push({
+                    name: 'map'
+                }) 
         },
         afterRead(file){
             console.log(file);            
@@ -63,5 +105,17 @@ export default {
 }
 .content{
     width: 100%;
+}
+.content-location{
+    font-size:16px;
+    position: relative;
+    height: 30px;
+    line-height:30px;
+    width:80%;
+    left:0;
+    right:0;
+    margin:auto;
+    border-bottom:1px solid #ebedf0;
+    background-color: white;
 }
 </style>

@@ -1,6 +1,15 @@
 <template>
-    <div style="height:660px;width:100%;">
-        <div ref="Mapcontent" class="map"></div>
+    <div class="wrapper">
+        <div>
+            <van-nav-bar
+                title="所在位置"
+                left-text="返回"
+                right-text="确定"
+                left-arrow
+                @click-left="onClickLeft"
+                @click-right="onClickRight"/>
+            <div ref="Mapcontent" class="map"></div>
+        </div>
     </div>
 </template>
 
@@ -12,7 +21,8 @@ export default {
         this.map = null;
         return{
             data:[],
-            active:''
+            active:'',
+            address:'123'
         }
     },
     mounted(){
@@ -28,6 +38,7 @@ export default {
                 resizeEnable: true, //是否监控地图容器尺寸变化
                 zoom:20, //初始化地图层级
             });
+            let that = this
             AMap.plugin('AMap.Geolocation', function() {
                 let geolocation = new AMap.Geolocation({
                     enableHighAccuracy: true,//是否使用高精度定位，默认:true
@@ -40,12 +51,27 @@ export default {
                 map.addControl(geolocation);
                 geolocation.getCurrentPosition(function(status,result){
                     if(status=='complete'){
-                        console.log(result);
+                        that.address = result.formattedAddress;
+                        console.log(that.address);                        
                     }else{
                         console.log(result);
                     }
                 });
             });        
+        },
+        onClickLeft(){
+           this.$router.push({
+                    name: 'publish'
+                }) 
+        },
+        onClickRight(){
+            const address = this.address
+            this.$router.push({
+                name:'publish',
+                params:{
+                    location: address,
+                }
+            })
         }
     }
     
@@ -53,10 +79,15 @@ export default {
 </script>
 
 <style  scoped>
+.wrapper{
+    height:100%;
+    /* width:100%; */
+    background-color: #fff;
+}
 .map {
     background: rgb(252, 249, 242);
     flex: 1;
-    height:94%;
+    height:567px;
     width:100%;
 }
 </style>

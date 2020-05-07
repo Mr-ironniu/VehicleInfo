@@ -3,53 +3,35 @@
         <div class="message" ref="wrapper">
             <div class="content">
                 <div class="touxiang">
-                    <div class="touxiang-name">yjj1</div>
-                    <img src="../../..//assets/feya.jpg" alt="">
+                    <div class="touxiang-name">{{ObjData.name}}</div>
+                    <img src="../../..//assets/tx.jpg" alt="">
                 </div>
                 <img  class="header" src="../../..//assets/fengmian.jpg" alt="">
                 <div class="center">
-                    <div class="item">
+                    <div class="item" v-for="item in List" :key="item.key">
                         <div class="tx-left">
-                            <img src="../../..//assets/feya.jpg" alt="">
+                            <img src="../../..//assets/tx.jpg" alt="">
                         </div>
                         <div class="text-right">
-                            <div class="text-name">yjj1</div>
+                            <div class="text-name">{{item.userName}}</div>
                             <div class="text-content">
-                                动态内容煞风景啊是大家佛为&nbsp;&nbsp;&nbsp;
-                                &nbsp;&nbsp;&nbsp;&nbsp;佛i女i啊士大夫w阿斯ssf asdfasffasdfasd顿佛i围殴妇女
+                                {{item.content}}
                                 </div>
                             <div  class="text-pingluicon">
                                 <van-icon class="text-icon" name="eye-o" />
-                                <div style="height:22px;display:inline-block;line-height:22px;font-size:15px;">20</div>
+                                <div style="height:22px;display:inline-block;line-height:22px;font-size:15px;">{{views}}</div>
                                 <van-icon class="text-icon" name="ellipsis" />
                             </div>
-                            <div class="comments" style="display:none">
-                            </div>
-                        </div>
-                        <van-divider />
-                    </div>
-                    <div class="item">
-                        <div class="tx-left">
-                            <img src="../../..//assets/feya.jpg" alt="">
-                        </div>
-                        <div class="text-right">
-                            <div class="text-name">yjj1</div>
-                            <div class="text-content">
-                                动态内容煞风景啊是大家佛为&nbsp;&nbsp;&nbsp;
-                                &nbsp;&nbsp;&nbsp;&nbsp;佛i女i啊士大夫w阿斯ssf asdfasffasdfasd顿佛i围殴妇女
-                                </div>
-                            <div  class="text-pingluicon">
-                                <van-icon class="text-icon" name="eye-o" />
-                                <div style="height:22px;display:inline-block;line-height:22px;font-size:15px;">20</div>
-                                <van-icon class="text-icon" name="ellipsis" />
+                            <div style="font-size:10px;color:#969799">
+                                {{item.location}}
                             </div>
                             <div class="comments" style="display:none">
-                                
                             </div>
                         </div>
                         <van-divider />
                     </div>
                 </div>
+
                 <!-- <van-form @submit="onSubmit">
                     <van-field name="data" label="文件上传">
                         <template #input>
@@ -64,23 +46,34 @@
                 </van-form> -->
                 
             </div>
-            <img class="publish" @click="publish" src="../../../assets/xiangji2.png" alt="">
         </div>
+        <img class="publish" @click="publish" src="../../../assets/xiangji2.png" alt="">
     </div>
 </template>
 
 <script>
 import Bscroll from 'better-scroll';
+import { trendList  } from '../../../api/axios'
 export default {
     name:'message',
     data(){
         return{
-            data:[
-               {url:'https://img.yzcdn.cn/vant/leaf.jpg'},
-
-            ],
+            userId:'',
+            ObjData:{
+                userId:'',
+                name:'',
+                vehiclebrand:'',
+                vehicletype:'',
+                user:'',
+                phone:'',
+                province:''
+            },
+            List:[],
+            views:1,
+            trendId:0,
             scroll_top:'',
             active:'',
+            name:'',
             scroll
         }
     },
@@ -89,19 +82,41 @@ export default {
     },
     mounted(){
         this.scroll = new Bscroll(this.$refs.wrapper);
-        console.log(this.$refs.wrapper);
-        console.log(this.scroll);
-        
-        
+        this.ObjData = { ...this.$route.params.obj};
+        this.Gettrend();
     },
     methods:{
         onSubmit(val){
             console.log(val);
         },
         publish(){
-            console.log(123);
-            
+            const userId = this.userId;
+            this.$router.push({
+                    name: 'publish',
+                    params:{
+                        userId: userId
+                    }
+                })   
         },
+        Gettrend(){
+            trendList(this.ObjData.id).then(res =>{
+                this.List = res.rows;  
+                console.log(this.List);
+                
+                // this.AddView();   
+            })
+        },
+        // AddView(){
+        //     for(let i=0;i<this.List.length;i++){  
+        //         setTimeout(()=>{
+        //             console.log(i);                    
+        //             trendView(this.List[i].id).then(res =>{
+        //                 console.log(res);                
+        //             }); 
+        //         },i*1000)                
+                           
+        //     }
+        // },
         afterRead(file){
             console.log(file);            
         }
@@ -111,19 +126,16 @@ export default {
 </script>
 
 <style  scoped>
+.wrapper{
+    /* height:100%; */
+    background: #fff;
+}
 .message{
-    overflow: hidden;
+    /* overflow: hidden; */
     position: absolute;
     left: 0;
     right: 0;
 }
-/* .publish{
-    
-    height: 30px;
-    width: 30px;
-    
-    margin: auto;
-} */
 .publish{
     height:25px;
     width: 25px;
@@ -165,14 +177,14 @@ export default {
 }
 .content{
     background-color: #fff;
-    /* height: 1000px; */
+    height:100%;
 }
 .center{
     background-color: #fff;
     width: 100%;
+    height:100%;
     position: relative;
     margin-top:40px;
-    /* height:330px; */
 }
 .header{
     position: relative;
@@ -182,10 +194,9 @@ export default {
 .item{
     position: relative;
     width:100%;
-    /* height:200px; */
 }
 .tx-left{
-    width:10%;
+    width:12%;
     height:100%;
     float:left;
     text-align: center;
@@ -197,8 +208,9 @@ export default {
 }
 .text-right{
     display: inline-block;
+    /* background-color: green; */
     height:100%;
-    width: 90%;
+    width: 88%;
     top: 0;
     right:0;
     margin:auto;
@@ -211,23 +223,22 @@ export default {
 .text-content{
     width: 90%;
     padding-top:10px;
-    /* white-space:pre-wrap; */
+    font-size: 14px;
     word-wrap:break-word;
 }
 .text-pingluicon{
     position: relative;
     display: inline-block;
+    height:20px;
     right:-75%;
-    margin-bottom: 2px;
+    /* margin-bottom: 2px; */
 }
 .text-icon{
-    /* position: absolute; */
     display: inline-block;
     background-color: #f4f4f4;
     margin: 0 4px;
-    height:20px;
+    height:13px;
     text-align: center;
-    line-height: 20px;
-    /* font-size:15px; */
+    line-height: 13px;
 }
 </style>
