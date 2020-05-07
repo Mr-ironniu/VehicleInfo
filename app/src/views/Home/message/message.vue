@@ -14,14 +14,36 @@
                         </div>
                         <div class="text-right">
                             <div class="text-name">yjj1</div>
-                            <div class="text-content">动态内容煞风景啊是大家佛为佛i女i啊士大夫w阿斯顿佛i围殴妇女</div>
+                            <div class="text-content">
+                                动态内容煞风景啊是大家佛为&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;佛i女i啊士大夫w阿斯ssf asdfasffasdfasd顿佛i围殴妇女
+                                </div>
                             <div  class="text-pingluicon">
                                 <van-icon class="text-icon" name="eye-o" />
                                 <div style="height:22px;display:inline-block;line-height:22px;font-size:15px;">20</div>
                                 <van-icon class="text-icon" name="ellipsis" />
                             </div>
-                            
-                            <div class="comments">
+                            <div class="comments" style="display:none">
+                            </div>
+                        </div>
+                        <van-divider />
+                    </div>
+                    <div class="item">
+                        <div class="tx-left">
+                            <img src="../../..//assets/feya.jpg" alt="">
+                        </div>
+                        <div class="text-right">
+                            <div class="text-name">yjj1</div>
+                            <div class="text-content">
+                                动态内容煞风景啊是大家佛为&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;佛i女i啊士大夫w阿斯ssf asdfasffasdfasd顿佛i围殴妇女
+                                </div>
+                            <div  class="text-pingluicon">
+                                <van-icon class="text-icon" name="eye-o" />
+                                <div style="height:22px;display:inline-block;line-height:22px;font-size:15px;">20</div>
+                                <van-icon class="text-icon" name="ellipsis" />
+                            </div>
+                            <div class="comments" style="display:none">
                                 
                             </div>
                         </div>
@@ -57,11 +79,20 @@ export default {
                {url:'https://img.yzcdn.cn/vant/leaf.jpg'},
 
             ],
-            active:''
+            scroll_top:'',
+            active:'',
+            scroll
         }
     },
-    mounth(){
+    computed:{
+    
+    },
+    mounted(){
         this.scroll = new Bscroll(this.$refs.wrapper);
+        console.log(this.$refs.wrapper);
+        console.log(this.scroll);
+        
+        
     },
     methods:{
         onSubmit(val){
@@ -148,29 +179,21 @@ export default {
 .item{
     position: relative;
     width:100%;
-    height:200px;
+    /* height:200px; */
 }
 .tx-left{
     width:10%;
     height:100%;
-    display: inline-block;
-    position: relative;
-    background-color: red;
+    float:left;
+    text-align: center;
 }
 .tx-left img{
     width:30px;
     height:30px;
     border-radius: 2px;
-    position: absolute;
-    top:0;
-    right:0;
-    left: 0;
-    margin: auto;
 }
 .text-right{
     display: inline-block;
-    position: absolute;
-    /* background-color: green; */
     height:100%;
     width: 90%;
     top: 0;
@@ -184,10 +207,15 @@ export default {
 }
 .text-content{
     width: 90%;
+    padding-top:10px;
+    /* white-space:pre-wrap; */
+    word-wrap:break-word;
 }
 .text-pingluicon{
-    position: absolute;
-    right:5%;
+    position: relative;
+    display: inline-block;
+    right:-75%;
+    margin-bottom: 2px;
 }
 .text-icon{
     /* position: absolute; */

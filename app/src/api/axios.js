@@ -3,7 +3,7 @@ import axios from "axios";
 
 // 登录接口函数
 export function UserLogin(value) {
-  const url = "http://139.199.192.171:8080/login/login.do";
+  const url = "http://114.116.242.72:8080/login/login.do";
   return axios.get(url,{
     params:value,
     headers:{
@@ -16,7 +16,7 @@ export function UserLogin(value) {
 
 // 注册接口函数
 export function UserSignup(value) {
-  const url = "http://139.199.192.171:8080/user/register.do";
+  const url = "http://114.116.242.72:8080/user/register.do";
   return axios.get(url,{
     params:value,
     headers:{
