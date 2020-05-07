@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="wrapper">
         <div class="message" ref="wrapper">
             <div class="content">
                 <div class="touxiang">
@@ -50,7 +50,7 @@
                         <van-divider />
                     </div>
                 </div>
-                <van-form @submit="onSubmit">
+                <!-- <van-form @submit="onSubmit">
                     <van-field name="data" label="文件上传">
                         <template #input>
                             <van-uploader v-model="data"   :after-read="afterRead"/>
@@ -61,10 +61,10 @@
                         提交
                         </van-button>
                     </div>
-                </van-form>
+                </van-form> -->
                 
             </div>
-            <img class="publish " src="../../../assets/xiangji2.png" alt="">
+            <img class="publish" @click="publish" src="../../../assets/xiangji2.png" alt="">
         </div>
     </div>
 </template>
@@ -97,6 +97,9 @@ export default {
     methods:{
         onSubmit(val){
             console.log(val);
+        },
+        publish(){
+            console.log(123);
             
         },
         afterRead(file){
@@ -162,14 +165,14 @@ export default {
 }
 .content{
     background-color: #fff;
-    height: 1000px;
+    /* height: 1000px; */
 }
 .center{
     background-color: #fff;
     width: 100%;
     position: relative;
     margin-top:40px;
-    height:330px;
+    /* height:330px; */
 }
 .header{
     position: relative;

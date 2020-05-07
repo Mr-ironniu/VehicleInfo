@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../views/login/Login.vue'
 import Home from '../views/Home/home.vue'
+import Publish from '../views/Home/message/publish/publish.vue'
 
 Vue.use(VueRouter)
 
@@ -48,7 +49,11 @@ Vue.use(VueRouter)
         component: () => import(/* webpackChunkName: "user" */ '../views/Home/map/map.vue')
       }
     ]
-  }
+  },{
+    path: '/publish',
+    name: 'publish',
+    component: Publish,
+  },
 ]
 
 const router = new VueRouter({
