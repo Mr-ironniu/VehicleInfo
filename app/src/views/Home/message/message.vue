@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="wrapper">
         <div class="message" ref="wrapper">
             <div class="content">
                 <div class="touxiang">
@@ -14,21 +14,53 @@
                         </div>
                         <div class="text-right">
                             <div class="text-name">yjj1</div>
-                            <div class="text-content">动态内容煞风景啊是大家佛为佛i女i啊士大夫w阿斯顿佛i围殴妇女</div>
+                            <div class="text-content">风雨过后不一定美好的天空</div>
                             <div  class="text-pingluicon">
                                 <van-icon class="text-icon" name="eye-o" />
                                 <div style="height:22px;display:inline-block;line-height:22px;font-size:15px;">20</div>
                                 <van-icon class="text-icon" name="ellipsis" />
                             </div>
-                            
                             <div class="comments">
-                                
+                            </div>
+                        </div>
+                        <van-divider />
+                    </div>
+                    <div class="item">
+                        <div class="tx-left">
+                            <img src="../../..//assets/feya.jpg" alt="">
+                        </div>
+                        <div class="text-right">
+                            <div class="text-name">yjj1</div>
+                            <div class="text-content">不是天晴就会有彩虹</div>
+                            <div  class="text-pingluicon">
+                                <van-icon class="text-icon" name="eye-o" />
+                                <div style="height:22px;display:inline-block;line-height:22px;font-size:15px;">20</div>
+                                <van-icon class="text-icon" name="ellipsis" />
+                            </div>
+                            <div class="comments">
+                            </div>
+                        </div>
+                        <van-divider />
+                    </div>
+                    <div class="item">
+                        <div class="tx-left">
+                            <img src="../../..//assets/feya.jpg" alt="">
+                        </div>
+                        <div class="text-right">
+                            <div class="text-name">yjj1</div>
+                            <div class="text-content">所以你一脸无辜 不代表你懵懂</div>
+                            <div  class="text-pingluicon">
+                                <van-icon class="text-icon" name="eye-o" />
+                                <div style="height:22px;display:inline-block;line-height:22px;font-size:15px;">20</div>
+                                <van-icon class="text-icon" name="ellipsis" />
+                            </div>
+                            <div class="comments">
                             </div>
                         </div>
                         <van-divider />
                     </div>
                 </div>
-                <van-form @submit="onSubmit">
+                <!-- <van-form @submit="onSubmit">
                     <van-field name="data" label="文件上传">
                         <template #input>
                             <van-uploader v-model="data"   :after-read="afterRead"/>
@@ -39,10 +71,10 @@
                         提交
                         </van-button>
                     </div>
-                </van-form>
+                </van-form> -->
                 
             </div>
-            <img class="publish " src="../../../assets/xiangji2.png" alt="">
+            <img class="publish" @click="publish" src="../../../assets/xiangji2.png" alt="">
         </div>
     </div>
 </template>
@@ -68,6 +100,11 @@ export default {
             console.log(val);
             
         },
+        publish(){
+            this.$router.push({
+                    name: 'publish'
+                }) 
+        },
         afterRead(file){
             console.log(file);            
         }
@@ -77,9 +114,14 @@ export default {
 </script>
 
 <style  scoped>
+.wrapper{
+    height:100%;
+    background: #fff;
+}
 .message{
     overflow: hidden;
     position: absolute;
+    height:100%;
     left: 0;
     right: 0;
 }
@@ -131,14 +173,14 @@ export default {
 }
 .content{
     background-color: #fff;
-    height: 1000px;
+    height:100%;
+    /* height: 1000px; */
 }
 .center{
     background-color: #fff;
     width: 100%;
     position: relative;
     margin-top:40px;
-    height:330px;
 }
 .header{
     position: relative;
@@ -148,34 +190,34 @@ export default {
 .item{
     position: relative;
     width:100%;
-    height:200px;
+    /* height:200px; */
 }
 .tx-left{
-    width:10%;
+    width:12%;
     height:100%;
     display: inline-block;
-    position: relative;
-    background-color: red;
+    float:left;
+    text-align: center;
+    /* background-color: red; */
 }
 .tx-left img{
     width:30px;
     height:30px;
     border-radius: 2px;
-    position: absolute;
-    top:0;
+    /* position: absolute; */
+    /* top:0;
     right:0;
     left: 0;
-    margin: auto;
+    margin: auto;  */
 }
 .text-right{
     display: inline-block;
-    position: absolute;
     /* background-color: green; */
     height:100%;
-    width: 90%;
-    top: 0;
-    right:0;
-    margin:auto;
+    width: 88%;
+    /* top: 0; */
+    /* right:0; */
+    /* margin:auto; */
 }
 .text-name{
     color:  #0088CC;
@@ -184,6 +226,8 @@ export default {
 }
 .text-content{
     width: 90%;
+    padding: 10px 0;
+    font-size:14px;
 }
 .text-pingluicon{
     position: absolute;
