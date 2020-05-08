@@ -9,6 +9,12 @@ const routes = [{
         component: () =>
             import ('../components/Login.vue')
     },
+	// {
+	// 	path: 'register',
+	// 	name: 'Register',
+	// 	component: () =>
+	// 		import ('../components/Register.vue')
+	// },
     {
         path: '/home',
         name: 'Home',
@@ -21,50 +27,30 @@ const routes = [{
                     import ('../components/Welcome')
             },
             {
-                path: '/users',
+                path: '/actions',
                 component: () =>
-                    import ('../components/users/Users')
+                    import ('../components/action/Action')
             },
             {
-                path: '/rights',
+                path: '/personal',
                 component: () =>
-                    import ('../components/power/Rights')
+                    import ('../components/personal/Personal.vue')
             },
             {
-                path: '/roles',
+                path: '/help',
                 component: () =>
-                    import ('../components/power/Roles')
+                    import ('../components/help/Help.vue')
             },
-            {
-                path: '/categories',
-                component: () =>
-                    import ('../components/goods/Cate.vue')
-            },
-            {
-                path: '/params',
-                component: () =>
-                    import ('../components/goods/Params.vue')
-            },
-            {
-                path: '/goods',
-                component: () =>
-                    import ('../components/goods/List.vue')
-            },
-            {
-                path: '/goods/add',
-                component: () =>
-                    import ('../components/goods/Add.vue')
-            },
-            {
-                path: '/orders',
-                component: () =>
-                    import ('../components/order/Order.vue')
-            },
-            {
-                path: '/reports',
-                component: () =>
-                    import ('../components/report/Report.vue')
-            }
+			{
+				path: '/users',
+				component: () =>
+				import ('../components/users/Users')
+			},
+			{
+				path: '/admin',
+				component: () =>
+				import ('../components/users/Admin')
+			}
         ],
     },
     {
@@ -86,8 +72,8 @@ const router = new VueRouter({
 //路由导航守卫
 router.beforeEach((to, from, next) => {
     if (to.path === '/login') return next()
-    const tokenStr = window.sessionStorage.getItem('token')
-    if (!tokenStr) return next('/login')
+    // const tokenStr = window.sessionStorage.getItem('token')
+    // if (!tokenStr) return next('/login')
     next()
 })
 export default router

@@ -38,7 +38,14 @@ import {
     Checkbox,
     Upload,
     Timeline,
-    TimelineItem
+    TimelineItem,
+	ButtonGroup,
+	Loading,
+	Image,
+	Carousel,
+	CarouselItem,
+	Notification,
+	DatePicker
 } from 'element-ui'
 
 Vue.use(Button)
@@ -78,7 +85,15 @@ Vue.use(CheckboxGroup)
 Vue.use(Upload)
 Vue.use(Timeline)
 Vue.use(TimelineItem)
+Vue.use(ButtonGroup)
+Vue.use(Loading)
+Vue.use(Image)
+Vue.use(Carousel)
+Vue.use(CarouselItem)
+Vue.use(DatePicker)
+
 
 
 Vue.prototype.$message = Message
+Vue.prototype.$notify = Notification
 Vue.prototype.$confirm = MessageBox.confirm

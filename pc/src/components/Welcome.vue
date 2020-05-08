@@ -6,7 +6,15 @@
 
 <script>
 export default {
-
+	data() {
+		return {
+			websocket: null,
+			timer: ""
+		}
+	},
+	methods: {
+		
+	}
 }
 </script>
 
