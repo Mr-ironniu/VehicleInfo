@@ -53,9 +53,10 @@ export default {
         forbidClick: true,
       })
       UserLogin(value).then(res =>{
+		console.log(value)
         this.$toast.clear();
         if(res.msg == '登录成功'){
-          console.log(res.obj.id);          
+			this.setCookie(res.obj)
           this.$toast.success("登录成功")
           this.$router.push({
                     name: 'message',
@@ -72,7 +73,13 @@ export default {
       this.$router.push({
                     name: 'SignUp'
                 })      
-    }
+    },
+	// 设置cookie
+	setCookie (c_data, exdays) {
+		var exdate = new Date()
+		exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays)
+		window.document.cookie = 'userdata' + '=' + JSON.stringify(c_data) + ';path=/;expires=' + exdate.toGMTString()
+	},
   }
 }
 </script>

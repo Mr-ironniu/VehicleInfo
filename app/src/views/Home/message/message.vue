@@ -1,43 +1,41 @@
 <template>
-    <div class="wrapper">
-        <div class="message" ref="wrapper">
-            <div class="content">
-                <div class="touxiang">
-                    <div class="touxiang-name">{{ObjData.name}}</div>
-                    <img src="../../..//assets/tx.jpg" alt="">
-                </div>
-                <img  class="header" src="../../..//assets/fengmian.jpg" alt="">
-                <div class="center">
-                    <div class="item" v-for="item in List" :key="item.key">
-                        <div class="tx-left">
-                            <img src="../../..//assets/tx.jpg" alt="">
-                        </div>
-                        <div class="text-right">
-                            <div class="text-name">{{item.userName}}</div>
-                            <div class="text-content">
-                                {{item.content}}
-                                </div>
-                            <div  class="text-pingluicon">
-                                <van-icon class="text-icon" name="eye-o" />
-                                <div style="height:22px;display:inline-block;line-height:22px;font-size:15px;">{{views}}</div>
-                                <van-icon class="text-icon" name="ellipsis" />
-                            </div>
-                            <div style="font-size:10px;color:#969799">
-                                {{item.location}}
-                            </div>
-                            <div class="comments" style="display:none">
-                            </div>
-                        </div>
-                        <van-divider />
+<div class="wrapper"  ref="wrapper">
+    <div class="message">
+        <div class="content">
+            <div class="touxiang">
+                <div class="touxiang-name">{{ObjData.name}}</div>
+                <img src="../../..//assets/tx.jpg" alt="">
+            </div>
+            <img  class="header" src="../../..//assets/fengmian.jpg" alt="">
+            <div class="center">
+                <div class="item" v-for="item in List" :key="item.key">
+                    <div class="tx-left">
+                        <img src="../../..//assets/tx.jpg" alt="">
                     </div>
+                    <div class="text-right">
+                        <div class="text-name">{{item.userName}}</div>
+                        <div class="text-content">
+                            {{item.content}}
+                            </div>
+                        <div  class="text-pingluicon">
+                            <!-- <van-icon class="text-icon" name="eye-o" />
+                            <div style="height:22px;display:inline-block;line-height:22px;font-size:15px;">{{views}}</div> -->
+                            <van-icon class="text-icon" name="ellipsis" />
+                        </div>
+                        <div style="font-size:10px;color:#969799">
+                            {{item.location}}
+                        </div>
+                        <div class="comments" style="display:none">
+                        </div>
+                    </div>
+                    <van-divider />
                 </div>
-
-                
-                
             </div>
         </div>
-        <img class="publish" @click="publish" src="../../../assets/xiangji2.png" alt="">
+        <div style="clear：both"></div>
     </div>
+    <img class="publish" @click="publish" src="../../../assets/xiangji2.png" alt="">
+</div>
 </template>
 
 <script>
@@ -116,15 +114,24 @@ export default {
 
 <style  scoped>
 .wrapper{
-    /* height:100%; */
-    background: #fff;
+    height:100%;
+    background-color: #fff;
 }
-.message{
-    /* overflow: hidden; */
+.message{    
+    background-color: #fff;
     position: absolute;
+    height:100%;
     left: 0;
     right: 0;
 }
+/* .message:after{
+     content:".";        
+     display:block;        
+     height:0;        
+     clear:both;        
+     visibility:hidden;        
+
+} */
 .publish{
     height:25px;
     width: 25px;
@@ -166,12 +173,10 @@ export default {
 }
 .content{
     background-color: #fff;
-    height:100%;
 }
 .center{
     background-color: #fff;
     width: 100%;
-    height:100%;
     position: relative;
     margin-top:40px;
 }
@@ -219,7 +224,8 @@ export default {
     position: relative;
     display: inline-block;
     height:20px;
-    right:-75%;
+    top:20px;
+    right:-90%;
     /* margin-bottom: 2px; */
 }
 .text-icon{

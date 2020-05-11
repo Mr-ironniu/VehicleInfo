@@ -9,19 +9,27 @@
             @click-right="onClickRight()"/>
         <div class="content">
             <van-field
-                v-model="content"
+                v-model="data.content"
                 rows="4"
                 autosize
                 type="textarea"
                 placeholder="这一刻的想法..."/>
-            <van-field left-icon="location-o" :label='location' @click="Getlocation"  disabled />
+            <!-- <van-field left-icon="location-o" :label='location' @click="Getlocation"  disabled /> -->
+            <van-cell title="所在位置" :label="data.location"	 icon="location-o"  @click="Getlocation" ></van-cell>
             <el-upload
+                multiple
+                :limit="6"
                 name="file"
                 action="http://114.116.242.72:8080/trend/uploadPic.do"
                 list-type="picture-card"
-                :on-preview="handlePictureCardPreview"
+                :on-preview="handlePictureCardPreview" 
                 :on-remove="handleRemove"
-                :data='Uploaddata'>
+                :data='Uploaddata'
+                :on-success="handlesuccess"
+                :on-error="handleerror"
+                :on-change="handlechange"
+                :on-exceed="hanlelimit"
+                :auto-upload="false">
                 <i class="el-icon-plus"></i>
             </el-upload>
             <el-dialog :visible.sync="dialogVisible">
@@ -37,22 +45,19 @@ import {ShareMood} from '../../../../api/axios'
 export default {
     data(){
         return{
-            content:'',
+            content:'',  
             data:{
                 title:'132',
                 userId:134,
-                content:'',
-                location:''
+                content:'',//动态文本内容
+                location:''//所在位置地址信息
             },
-            active:'',
-            data1:'',
             location:'',
-            dialogImageUrl: '',
             Uploaddata:{
                 trendId:131,
                 sort:9,
                 file:''
-            },
+            },//图片对象参数
             dialogVisible: false,
             header: {
                 "Content-Type": "multipart/form-data"
@@ -62,21 +67,22 @@ export default {
     created(){
     },
     mounted(){
-        this.location = '所在位置';
         this.getdata()
         if(!this.data.userId)this.data.userId = this.$route.params.userId;
     },
     methods:{
+        //返回
         onClickLeft(){
             this.$router.push({
                     name: 'message'
                 }) 
         },
+        //发表
         onClickRight(){
-            this.data.content = this.content;
-            this.data.location = this.location;
-            console.log(this.data);
-            
+            if(!this.content){
+                this.$toast.fail("动态内容不能为空");
+                return
+            }
             ShareMood(this.data).then(res =>{
                 if(res.msg == '新增动态成功'){         
                     this.$toast.success("发表成功")
@@ -91,16 +97,35 @@ export default {
                 } 
             })          
         },
+        //获取位置信息
         getdata(){
             if(!this.$route.params.location)return;
-            this.location = this.$route.params.location         
+            this.data.location = this.$route.params.location         
         },
+        //移除文件时触发
         handleRemove(file, fileList) {
-            console.log(file, fileList);
+            console.log("handleRemove",file, fileList);
         },
+        //点击文件列表中已上传的文件时的钩子
         handlePictureCardPreview(file) {
+            console.log("handlePictureCardPreview",file);            
             this.Uploaddata.file = file.url;
             this.dialogVisible = true;
+        },
+        //添加文件、成功失败钩子
+        handlechange(file, fileList){
+            console.log("handlechange",file,fileList);
+        },
+        //上传失败钩子
+        handlesuccess(err, file, fileList){
+            console.log("handlesuccess",err, file, fileList);
+        },
+        //上传失败钩子
+        handleerror(response, file, fileList){
+            console.log("handleerror",response, file, fileList);            
+        },
+        hanlelimit(file, fileList){
+            console.log("hanlelimit",file,fileList);
         },
         onCancel() {
             this.show = false;
@@ -120,6 +145,14 @@ export default {
 </script>
 
 <style  scoped>
+.avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 78px;
+    height: 78px;
+    line-height: 78px;
+    text-align: center;
+  }
 .wrapper{
     height:100%;
     background: #fff;
