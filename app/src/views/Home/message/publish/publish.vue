@@ -15,7 +15,18 @@
                 type="textarea"
                 placeholder="这一刻的想法..."/>
             <van-field left-icon="location-o" :label='location' @click="Getlocation"  disabled />
-            <div></div>
+            <el-upload
+                name="file"
+                action="http://114.116.242.72:8080/trend/uploadPic.do"
+                list-type="picture-card"
+                :on-preview="handlePictureCardPreview"
+                :on-remove="handleRemove"
+                :data='Uploaddata'>
+                <i class="el-icon-plus"></i>
+            </el-upload>
+            <el-dialog :visible.sync="dialogVisible">
+                <img width="100%" :src="Uploaddata.file" alt="">
+            </el-dialog>
              <!-- <div class="content-location" @click="Quit">当前所在位置</div> -->
         </div>
     </div>
@@ -36,6 +47,16 @@ export default {
             active:'',
             data1:'',
             location:'',
+            dialogImageUrl: '',
+            Uploaddata:{
+                trendId:131,
+                sort:9,
+                file:''
+            },
+            dialogVisible: false,
+            header: {
+                "Content-Type": "multipart/form-data"
+            }
         }
     },
     created(){
@@ -74,9 +95,13 @@ export default {
             if(!this.$route.params.location)return;
             this.location = this.$route.params.location         
         },
-        // publish(){
-        //     console.log(123);
-        // },
+        handleRemove(file, fileList) {
+            console.log(file, fileList);
+        },
+        handlePictureCardPreview(file) {
+            this.Uploaddata.file = file.url;
+            this.dialogVisible = true;
+        },
         onCancel() {
             this.show = false;
             this.$toast('cancel');

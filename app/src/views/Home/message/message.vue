@@ -32,18 +32,7 @@
                     </div>
                 </div>
 
-                <!-- <van-form @submit="onSubmit">
-                    <van-field name="data" label="文件上传">
-                        <template #input>
-                            <van-uploader v-model="data"   :after-read="afterRead"/>
-                        </template>
-                    </van-field>
-                     <div style="margin: 16px;">
-                        <van-button round block type="info" native-type="submit">
-                        提交
-                        </van-button>
-                    </div>
-                </van-form> -->
+                
                 
             </div>
         </div>

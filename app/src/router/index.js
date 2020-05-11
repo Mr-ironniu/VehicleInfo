@@ -39,6 +39,11 @@ Vue.use(VueRouter)
         component: () => import(/* webpackChunkName: "user" */ '../views/Home/help/help.vue')
       },
       {
+        path: 'detail',
+        name: 'detail',
+        component: () => import(/* webpackChunkName: "user" */ '../views/Home/help/helpDetail.vue')
+      },
+      {
         path: 'message',
         name: 'message',
         component: () => import(/* webpackChunkName: "user" */ '../views/Home/message/message.vue')

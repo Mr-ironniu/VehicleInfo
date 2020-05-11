@@ -1,8 +1,11 @@
 import axios from "axios";
 // import qs from "qs";
+
+const api = 'http://114.116.242.72:8080'
+
 // 登录接口函数
 export function UserLogin(value) {
-  const url = "http://114.116.242.72:8080/login/login.do";
+  const url = api + "/login/login.do";
   return axios.get(url,{
     params:value,
     headers:{
@@ -15,7 +18,7 @@ export function UserLogin(value) {
 
 // 注册接口函数
 export function UserSignup(value) {
-  const url = "http://114.116.242.72:8080/user/register.do";
+  const url = api + "/user/register.do";
   return axios.get(url,{
     params:value,
     headers:{
@@ -28,7 +31,7 @@ export function UserSignup(value) {
 
 // 发布动态
 export function ShareMood(value) {
-  const url = "http://114.116.242.72:8080/trend/insert.do";
+  const url = api + "/trend/insert.do";
   return axios.get(url,{
     params:value,
     headers:{
@@ -41,7 +44,7 @@ export function ShareMood(value) {
 
 // 查询动态
 export function trendList(value) {
-  const url = "http://114.116.242.72:8080/trend/select.do";
+  const url = api + "/trend/select.do";
   return axios.get(url,{
     params:value,
     headers:{
@@ -54,7 +57,7 @@ export function trendList(value) {
 
 // 查询动态
 export function trendView(value) {
-  const url = "http://114.116.242.72:8080/trend/view.do";
+  const url = api + "/trend/view.do";
   return axios.get(url,{
     params:value,
     headers:{
@@ -64,4 +67,31 @@ export function trendView(value) {
     console.log(res);
       return Promise.resolve(res.data);
     });
+}
+
+// 查询求助信息接口函数
+export function helpDataPost(values) {
+	const url = api + '/seek/select.do';	
+	
+	return axios.get(url,{
+		params: values,
+		headers: {
+			"Content-Type": "multipart/form-data"
+		},
+	}).then(res => {
+		return Promise.resolve(res.data);
+	});
+}
+
+// 新增求助信息接口函数
+export function helpDataSubmit(values) {
+	const url = api + '/seek/insert.do';	
+	console.log(values)
+	
+	return axios.get(url,{
+		params: values
+	}).then(res => {
+		console.log(res)
+		return Promise.resolve(res.data);
+	});
 }
