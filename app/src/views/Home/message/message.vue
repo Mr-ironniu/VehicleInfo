@@ -6,7 +6,7 @@
                 <div class="touxiang-name">{{ObjData.name}}</div>
                 <img src="../../..//assets/tx.jpg" alt="">
             </div>
-            <img  class="header" src="../../..//assets/fengmian.jpg" alt="">
+            <img  class="header" src="../../../assets/fengmian.jpg" alt="">
             <div class="center">
                 <div class="item" v-for="item in List" :key="item.key">
                     <div class="tx-left">
@@ -15,8 +15,9 @@
                     <div class="text-right">
                         <div class="text-name">{{item.userName}}</div>
                         <div class="text-content">
-                            {{item.content}}
-                            </div>
+                            <p>{{item.content}}</p>
+                            <!-- <img style="position:relative;z-index:1001;height:50px;width:50px;" src="../../../assets/feya.jpg" alt=""> -->
+                        </div>
                         <div  class="text-pingluicon">
                             <!-- <van-icon class="text-icon" name="eye-o" />
                             <div style="height:22px;display:inline-block;line-height:22px;font-size:15px;">{{views}}</div> -->
@@ -32,14 +33,15 @@
                 </div>
             </div>
         </div>
-        <div style="clear：both"></div>
     </div>
-    <img class="publish" @click="publish" src="../../../assets/xiangji2.png" alt="">
+    <div @click="publish">
+        <img class="publish" src="../../../assets/xiangji2.png" alt="">
+    </div>
 </div>
 </template>
 
 <script>
-import Bscroll from 'better-scroll';
+// import Bscroll from 'better-scroll';
 import { trendList  } from '../../../api/axios'
 export default {
     name:'message',
@@ -53,7 +55,8 @@ export default {
                 vehicletype:'',
                 user:'',
                 phone:'',
-                province:''
+                province:'',
+                picList:[]
             },
             List:[],
             views:1,
@@ -68,7 +71,7 @@ export default {
     
     },
     mounted(){
-        this.scroll = new Bscroll(this.$refs.wrapper);
+        // this.scroll = new Bscroll(this.$refs.wrapper);
         this.ObjData = { ...this.$route.params.obj};
         this.Gettrend();
     },
@@ -124,14 +127,6 @@ export default {
     left: 0;
     right: 0;
 }
-/* .message:after{
-     content:".";        
-     display:block;        
-     height:0;        
-     clear:both;        
-     visibility:hidden;        
-
-} */
 .publish{
     height:25px;
     width: 25px;
@@ -224,7 +219,7 @@ export default {
     position: relative;
     display: inline-block;
     height:20px;
-    top:20px;
+    top:10px;
     right:-90%;
     /* margin-bottom: 2px; */
 }

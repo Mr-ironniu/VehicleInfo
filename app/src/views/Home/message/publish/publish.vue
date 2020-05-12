@@ -6,7 +6,7 @@
             right-text="发布"
             left-arrow
             @click-left="onClickLeft"
-            @click-right="onClickRight()"/>
+            @click-right="onClickRight"/>
         <div class="content">
             <van-field
                 v-model="data.content"
@@ -18,7 +18,8 @@
             <van-cell title="所在位置" :label="data.location"	 icon="location-o"  @click="Getlocation" ></van-cell>
             <el-upload
                 multiple
-                :limit="6"
+                :limit="9"
+                ref="upload"
                 name="file"
                 action="http://114.116.242.72:8080/trend/uploadPic.do"
                 list-type="picture-card"
@@ -44,8 +45,7 @@
 import {ShareMood} from '../../../../api/axios'
 export default {
     data(){
-        return{
-            content:'',  
+        return{  
             data:{
                 title:'132',
                 userId:134,
@@ -54,14 +54,12 @@ export default {
             },
             location:'',
             Uploaddata:{
-                trendId:131,
-                sort:9,
+                trendId:0,
+                sort:0,
                 file:''
             },//图片对象参数
+            fileList:[],
             dialogVisible: false,
-            header: {
-                "Content-Type": "multipart/form-data"
-            }
         }
     },
     created(){
@@ -79,23 +77,38 @@ export default {
         },
         //发表
         onClickRight(){
-            if(!this.content){
-                this.$toast.fail("动态内容不能为空");
-                return
-            }
-            ShareMood(this.data).then(res =>{
-                if(res.msg == '新增动态成功'){         
-                    this.$toast.success("发表成功")
-                    this.$router.push({
-                            name: 'message',
-                            params: {
-                                content: this.data.content
+            let that = this;
+            // console.log(that.fileList);            
+            const len_pic =  that.fileList.length;
+            const len_content = that.data.content.length;  
+            if(!len_content){
+                that.$toast.fail("动态内容不能为空")
+                return;
+            }else{
+                console.log(12312321);
+                ShareMood(that.data).then(res =>{
+                    if(res.msg == '新增动态成功'){       
+                        that.Uploaddata.trendId = res.obj.id;                     
+                        if(len_pic){
+                            for(let i=0;i<len_pic;i++){
+                                setTimeout(()=>{
+                                    that.Uploaddata.sort = i+1;
+                                    that.Uploaddata.file = that.fileList[i].url;                                 
+                                    this.$refs.upload.submit();               
+                                },i*1000)
                             }
-                        }) 
-                } else{
-                    this.$toast.fail(res.msg);
-                } 
-            })          
+                            this.$toast.success("发表成功")
+                            this.$router.push({
+                                    name: 'message'
+                                }) 
+                        } else{
+                            console.log(that.fileList);                                           
+                        }
+                    } else{
+                        that.$toast.fail(res.msg);
+                    } 
+                })     
+            }     
         },
         //获取位置信息
         getdata(){
@@ -109,12 +122,13 @@ export default {
         //点击文件列表中已上传的文件时的钩子
         handlePictureCardPreview(file) {
             console.log("handlePictureCardPreview",file);            
-            this.Uploaddata.file = file.url;
+            // this.Uploaddata.file = file.url;
             this.dialogVisible = true;
         },
         //添加文件、成功失败钩子
         handlechange(file, fileList){
-            console.log("handlechange",file,fileList);
+            // console.log("handlechange",file,fileList);
+            this.fileList = fileList;
         },
         //上传失败钩子
         handlesuccess(err, file, fileList){
@@ -124,16 +138,15 @@ export default {
         handleerror(response, file, fileList){
             console.log("handleerror",response, file, fileList);            
         },
-        hanlelimit(file, fileList){
-            console.log("hanlelimit",file,fileList);
-        },
-        onCancel() {
-            this.show = false;
-            this.$toast('cancel');
+        hanlelimit(){
+            this.$message.warning(`已达到最大上传照片数`);
         },
         Getlocation(){
             this.$router.push({
-                    name: 'map'
+                    name: 'map',
+                    params:{
+                        showmap: true 
+                    }
                 }) 
         },
         afterRead(file){

@@ -27,6 +27,14 @@ export default {
     },
     mounted(){
         this.init();
+        let map = document.querySelector('.map');
+        if(this.$route.params.showmap){
+            this.showmap = true;
+            map.style.height = '570px'
+        }else{
+            this.showmap = false
+            map.style.height = '620px';
+        }
     },
     methods:{
         init(){
@@ -81,13 +89,13 @@ export default {
 <style  scoped>
 .wrapper{
     height:100%;
-    /* width:100%; */
+    width:100%;
     background-color: #fff;
 }
 .map {
     background: rgb(252, 249, 242);
     flex: 1;
-    height:567px;
     width:100%;
+    height:570px;
 }
 </style>
