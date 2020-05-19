@@ -64,6 +64,16 @@
 			<el-table-column type="selection"></el-table-column>
 			<el-table-column prop="userName" label="用户名"></el-table-column>
 			<el-table-column prop="seekcontent" label="求助内容"></el-table-column>
+			<el-table-column label="图片">
+					<template v-slot="scope">
+						<!-- 查看图片-->
+						<el-button
+							type="text"
+							@click="checkImg(scope.row)"
+							size="small"
+						>查看图片</el-button>
+					</template>
+			</el-table-column>
 			<el-table-column prop="location" label="位置"></el-table-column>
 			<el-table-column prop="createtime" label="求助时间"></el-table-column>
 			<el-table-column prop="state" label="状态"></el-table-column>
@@ -165,11 +175,24 @@
 		</span>
 	</el-dialog>
 
+	<el-dialog
+		title="查看图片"
+		:visible.sync="imgDialogVisible"
+		width="50%"
+		@close="imgDialogClosed"
+		ref="imgDialog"
+	>
+		<div class="img" >
+			<div class="img_div" v-for="url in imgList" :key="url">
+				<el-image :src="url" :fit="fit" style="height: 240px;" :preview-src-list="imgList"></el-image>
+			</div>
+		</div>
+	</el-dialog>
   </div>
 </template>
 
 <script>
-import { helpDataPost, handleDataPost, delHandleData } from '../../api/axios.js'
+import { helpDataPost, handleDataPost, delHandleData, imgDataPost } from '../../api/axios.js'
 import { Home } from '../../views/Home.vue'
 
 export default {
@@ -212,10 +235,25 @@ export default {
 		websock: null,
 		userId: null,
 		helpDialogVisible: false,
-		helpUserForm: {}
+		helpUserForm: {},
+		fit: 'fill'
     };
   },
   methods: {
+	checkImg(obj) {
+		const apiUrl = imgDataPost()
+		let url = ""
+		obj.pictureList.forEach((item) => {
+			url = apiUrl + item.path
+			this.imgList.push(url)
+		})
+		console.log(this.imgList)
+		this.imgDialogVisible = true
+	},
+	imgDialogClosed() {
+		this.imgList = []
+		this.imgDialogVisible = false
+	},
 	// 读取cookie
 	getCookie: function () {
 		var that = this
@@ -445,14 +483,26 @@ export default {
   align-items: center;
 }
 
+
 .img {
 	display: flex;
-	flex-direction: column;
-	height: 600px;
-	overflow-y: scroll;
+	align-items: center;
+	flex-wrap: wrap;
+	width: 100%;
 }
 
 .img_div {
-	text-align: center;
+	border: 1px solid silver;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	width:30%;
+	height: 30%;
+	margin-top: 5px;
+	margin-right: 5px;
+	// overflow: hidden;
+	// padding-top: 10px;
+	// padding-bottom: 10px;
 }
 </style>
