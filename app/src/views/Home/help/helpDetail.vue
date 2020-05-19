@@ -16,6 +16,9 @@
 			<el-form-item label="求助内容" prop="seekcontent">
 				<el-input v-model="helpDetailForm.seekcontent" readonly></el-input>
 			</el-form-item>
+			<el-form-item label="求助图片">
+				<el-button type="text" @click="lookPic">查看图片</el-button>
+			</el-form-item>
 			<el-form-item label="位置" prop="location">
 				<el-input v-model="helpDetailForm.location" readonly></el-input>
 			</el-form-item>
@@ -35,16 +38,31 @@
 				<el-button type="primary" @click="backHelp">返回</el-button>
 			</div>	
 		</el-form>
+		<el-dialog
+			title="查看图片"
+			:visible.sync="imgDialogVisible"
+			width="100%"
+			@close="imgDialogClosed"
+			ref="imgDialog"
+		>
+			<el-carousel indicator-position="none" height="200px">
+				<el-carousel-item v-for="url in imgList" :key="url" >
+					<el-image :src="url" :fit="fit" style="height: 100%;"></el-image>
+				</el-carousel-item>
+			</el-carousel>
+		</el-dialog>
 	</div>
 </template>
 
 <script>
-	import { helpDataPost } from '../../../api/axios.js'
+	import { helpDataPost, imgDataPost } from '../../../api/axios.js'
 	export default {
 		name:"helpDetail",
 		data() {
 			return {
 				helpId: null,
+				imgDialogVisible: false,
+				fit: "fill",
 				helpDetailForm: {},
 				queryInfo: {
 					id: null
@@ -56,6 +74,7 @@
 					value: "2",
 					label: "已处理"
 				}],
+				imgList: []
 			}
 		},
 		methods: {
@@ -76,6 +95,18 @@
 					name: 'help'
 				})
 				this.helpDetailForm = {}
+			},
+			lookPic() {
+				const apiUrl = imgDataPost()
+				let url = ""
+				this.helpDetailForm.pictureList.forEach((item) => {
+					url = apiUrl + item.path
+					this.imgList.push(url)
+				})
+				this.imgDialogVisible = true
+			},
+			imgDialogClosed() {
+				this.imgDialogVisible = false
 			}
 		},
 		created() {
@@ -88,4 +119,25 @@
 </script>
 
 <style>
+	.img {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		width: 100%;
+	}
+	
+	.img_div {
+		border: 1px solid silver;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+		width:30%;
+		height: 30%;
+		margin-top: 5px;
+		margin-right: 5px;
+		/* // overflow: hidden; */
+		/* // padding-top: 10px; */
+		/* // padding-bottom: 10px; */
+	}
 </style>

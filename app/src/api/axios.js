@@ -72,7 +72,7 @@ export function trendView(value) {
 // 查询求助信息接口函数
 export function helpDataPost(values) {
 	const url = api + '/seek/select.do';	
-	
+	console.log(values)
 	return axios.get(url,{
 		params: values,
 		headers: {
@@ -91,7 +91,13 @@ export function helpDataSubmit(values) {
 	return axios.get(url,{
 		params: values
 	}).then(res => {
-		console.log(res)
 		return Promise.resolve(res.data);
 	});
+}
+
+// 获取动态消息图片接口函数
+export function imgDataPost() {
+	const url = api + '/trend/getPic.do?url=';
+	
+	return url
 }

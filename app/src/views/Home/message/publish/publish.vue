@@ -9,7 +9,8 @@
             @click-right="onClickRight"/>
         <div class="content">
             <van-field
-                v-model="data.content"
+                v-model="content"
+                @input="handlecontent"
                 rows="4"
                 autosize
                 type="textarea"
@@ -34,7 +35,7 @@
                 <i class="el-icon-plus"></i>
             </el-upload>
             <el-dialog :visible.sync="dialogVisible">
-                <img width="100%" :src="Uploaddata.file" alt="">
+                <img width="100%" :src="dialogImageUrl" alt="">
             </el-dialog>
              <!-- <div class="content-location" @click="Quit">当前所在位置</div> -->
         </div>
@@ -52,7 +53,7 @@ export default {
                 content:'',//动态文本内容
                 location:''//所在位置地址信息
             },
-            location:'',
+            content: this.$store.state.content, 
             Uploaddata:{
                 trendId:0,
                 sort:0,
@@ -60,6 +61,7 @@ export default {
             },//图片对象参数
             fileList:[],
             dialogVisible: false,
+            dialogImageUrl: '',
         }
     },
     created(){
@@ -69,6 +71,10 @@ export default {
         if(!this.data.userId)this.data.userId = this.$route.params.userId;
     },
     methods:{
+        handlecontent(){
+            console.log('this.content :>> ', this.content);
+            this.$store.commit('changeContent',this.content)
+        },
         //返回
         onClickLeft(){
             this.$router.push({
@@ -122,7 +128,7 @@ export default {
         //点击文件列表中已上传的文件时的钩子
         handlePictureCardPreview(file) {
             console.log("handlePictureCardPreview",file);            
-            // this.Uploaddata.file = file.url;
+            this.dialogImageUrl = file.url;
             this.dialogVisible = true;
         },
         //添加文件、成功失败钩子

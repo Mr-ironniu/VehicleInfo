@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<el-tabs v-model="activeName" @tab-click="handleClick" >
+		<el-tabs v-model="activeName" @tab-click="handleClick">
 			<el-tab-pane label="我的求助" name="myHelp" ref="tabItem">
 				<div v-for="item in helpList" :key="item.id" style="margin-top: 5px;">
 					<el-card :body-style="{ padding: '0px' }">
@@ -14,7 +14,7 @@
 					</el-card>
 				</div>
 			</el-tab-pane>
-			<el-tab-pane label="发起求助" name="help">
+			<el-tab-pane label="发起求助" name="help" style="background-color: #FFFFFF;">
 				<div style="padding: 10px;">
 					<el-form
 						:model="helpForm"
@@ -23,7 +23,7 @@
 						class="demo-ruleForm"
 					>
 						<el-form-item label="用户名" prop="userName">
-							<el-input v-model="helpForm.userName"></el-input>
+							<el-input v-model="helpForm.userName" disabled></el-input>
 						</el-form-item>
 						<!-- <el-form-item label="求助时间" prop="createtime">
 							<el-date-picker v-model="helpForm.createtime" type="datetime"></el-date-picker>
@@ -36,7 +36,26 @@
 								<el-button slot="append" :icon="iconName" @click="getLocation"></el-button>
 							</el-input>
 						</el-form-item>
-						<el-form-item>
+						<el-form-item label="上传图片">
+							<el-upload
+								class="upload-demo"
+								ref="upload"
+								action="http://114.116.242.72:8080/trend/uploadPic.do"
+								:data="uploadData"
+								:file-list="fileList"
+								:on-success="uploadSuccess"
+								:on-change="uploadChange"
+								list-type="picture"
+								:auto-upload="false"
+								:limit="9"
+							>
+								<!-- <i class="el-icon-plus"></i> -->
+								<el-button size="small" type="primary">点击上传</el-button>
+								<!-- <span></span> -->
+							</el-upload>
+						</el-form-item>
+						
+						<el-form-item style="margin-top: 50px;">
 							<el-button type="primary" @click="submit">提交</el-button>
 							<el-button @click="resetForm('helpFormRef')">重置</el-button>
 						</el-form-item>
@@ -50,7 +69,7 @@
 
 <script type="text/javascript" src='https://webapi.amap.com/maps?v=1.4.15&key=039207bfce18c539c470483ce49e08ed'></script>
 <script>
-import { helpDataPost, helpDataSubmit } from '../../../api/axios'
+import { helpDataPost, helpDataSubmit, uploadPicture } from '../../../api/axios'
 
 export default {
 	// inject:['reload'],
@@ -93,6 +112,11 @@ export default {
     data(){
         return{
 			map: null,
+			uploadData: {
+				trendId: null,
+				files: []
+			},
+			fileList: [],
             activeName: 'myHelp',
 			personal: {},
 			queryInfo: {
@@ -106,7 +130,8 @@ export default {
 			},
 			iconName: 'el-icon-location',
 			helpList: [],
-			websocket: null
+			websocket: null,
+			id: null
         }
     },
 	methods:{
@@ -148,8 +173,7 @@ export default {
 					if(status=='complete'){
 						that.helpForm.location = result.formattedAddress
 						that.$set(that, 'helpForm', {...that.helpForm})
-						that.iconName = 'el-icon-location'
-						console.log(that.helpForm.location)                       
+						that.iconName = 'el-icon-location'                     
 					}else{
 						console.log(result);
 					}
@@ -179,10 +203,8 @@ export default {
 			document.getElementById('tab-help').style.textAlign = 'center'
 			document.getElementById('tab-help').style.padding = '0px'
 			helpDataPost(this.queryInfo).then((res) => {
-				console.log(res)
 				this.helpList = res.rows
 				this.total = res.total
-				console.log(res)
 			})
 		},
 		handleClick(tab, event){
@@ -200,11 +222,15 @@ export default {
 			}
 		},
 		submit() {
+			console.log(this.helpForm)
 			helpDataSubmit(this.helpForm).then((res) => {
+				// var that = this
 				if (res.flag === 1) {
-					this.$message.success('提交成功！')
-					this.websocketsend(res.obj.id)
+					this.uploadData.trendId = res.obj.id
+					this.id = res.obj.id
+					this.$refs.upload.submit()
 					this.getHelpList()
+					this.$message.success('提交成功！')
 					this.activeName = "myHelp"
 					this.helpForm = {
 						type: '1',
@@ -216,7 +242,14 @@ export default {
 			})
 		},
 		resetForm(formName) {
-			this.$refs[formName].resetFields();
+			this.helpForm = {}
+			this.helpForm.userName = this.personal.name
+			this.$set(this, 'helpForm', {...this.helpForm})
+			// this.$refs[formName].resetFields();
+			this.$refs.upload.clearFiles()
+		},
+		uploadPic() {
+			this.$refs.upload.submit()
 		},
 		async getLocation() {
 			await this.init()
@@ -226,12 +259,35 @@ export default {
 			this.getHelpList();
 		},
 		goDetail(id) {
+			console.log(id)
 			this.$router.push({
 				name: 'detail',
 				query:{
 					id: id
 				}
 			})
+		},
+		uploadSuccess(response, file, fileList) {
+			this.websocketsend(this.id)
+			this.$refs.upload.clearFiles()
+			this.uploadData = {
+				trendId: null,
+				files: []
+			}
+			// console.log(fileList)
+		},
+		uploadChange(file, fileList) {
+			// const width = document.body.clientWidth
+			// let card_1 = document.getElementsByClassName('el-upload-list__item ')
+			// console.log(card_1[0].style)
+			// card_1[0].style.width = width / 3 + 'px'
+			// card_1[0].style.height = width / 3 + 'px'
+			let obj = {
+				src: ""
+			}
+			obj.src = file.url
+			this.uploadData.files.push(obj)
+			// this.fileList = fileList
 		}
 	},
 	async created() {
@@ -273,7 +329,6 @@ export default {
 	.clearfix:after {
 		clear: both
 	}
-	
 	/* .el-tabs__item {
 		width: 150px !important;
 	} */

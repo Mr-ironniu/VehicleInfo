@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import Vant from 'vant';
+import store from './store/index'
 import { Toast } from 'vant';
 import 'vant/lib/index.css';
 import ElementUI from 'element-ui'
@@ -19,5 +20,6 @@ Toast.setDefaultOptions({duration:800});
 
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app')
