@@ -270,18 +270,6 @@ export default {
 				// console.log(this.helpList)
 			}
 			const h = this.$createElement
-			this.$notify({
-				title: '提示',
-				type: 'warning',
-				dangerouslyUseHTMLString: true,
-				duration: 2000,
-				message: h('div', {
-					on: {
-						click:this.goHandle
-					}
-				},this.queryName + '发来一条求助信息，点击此提示框进行处理或请尽快前往求助信息页面处理！')
-				// `<div><strong style="font-size: 18px">` + this.queryName + `</strong><button style="border-style: none none solid none; background: #fff; border-color: blue; color: blue" onClick="${goHandle}">前往处理</button></div>`
-			})
 		})
 		// console.log(event)
 		// const redata = JSON.parse(event.data);
