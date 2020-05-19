@@ -140,7 +140,7 @@ export function imgDataPost(imgUrl) {
 // 查询求助信息接口函数
 export function helpDataPost(values) {
 	const url = api + '/seek/select.do';	
-	
+	console.log(values)
 	return axios.get(url,{
 		params: values,
 		headers: {

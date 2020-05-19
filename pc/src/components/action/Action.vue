@@ -2,8 +2,8 @@
   <div>
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>权限管理</el-breadcrumb-item>
-      <el-breadcrumb-item>角色列表</el-breadcrumb-item>
+      <el-breadcrumb-item>动态管理</el-breadcrumb-item>
+      <el-breadcrumb-item>动态列表</el-breadcrumb-item>
     </el-breadcrumb>
 
 	<el-card style="height: 90px;">
@@ -169,7 +169,22 @@ export default {
 		var hours = date.getHours();
 		var minu = date.getMinutes();
 		var sec = date.getSeconds();
-		return year+'/'+mon+'/'+day+' '+hours+':'+minu+':'+sec;
+		if (mon < 10) {
+			mon = '0' + mon
+		}
+		if (day < 10) {
+			day = '0' + day
+		}
+		if (hours < 10) {
+			hours = '0' + hours
+		}
+		if (minu < 10) {
+			minu = '0' + minu
+		}
+		if (sec < 10) {
+			sec = '0' + sec
+		}
+		return year+'-'+mon+'-'+day+' '+hours+':'+minu+':'+sec;
 	},
 
 	handleSizeChange(newSize) {

@@ -47,7 +47,7 @@
 			<el-row>
 				<el-col :span="12">
 					<el-form-item label="城市">
-						<el-input v-model="personalForm.phone" style="width: 400px;" :disabled="edit"></el-input>
+						<el-input v-model="personalForm.city" style="width: 400px;" :disabled="edit"></el-input>
 					</el-form-item>
 				</el-col>
 				<el-col :span="12">
@@ -113,10 +113,22 @@ export default {
 					break
 				}
 			}
+			if (this.personalForm.type === '1') {
+				this.personalForm.type = '普通用户'
+			}
+			if (this.personalForm.type === '2') {
+				this.personalForm.type = '管理员'
+			}
 		}
 	},
 	submitInfo() {
 		if (!this.edit) {
+			if (this.personalForm.type === '普通用户') {
+				this.personalForm.type = '1'
+			}
+			if (this.personalForm.type === '管理员') {
+				this.personalForm.type = '2'
+			}
 			editUserData(this.personalForm).then((res) => {
 				if (res.flag === 1) {
 					this.edit = true

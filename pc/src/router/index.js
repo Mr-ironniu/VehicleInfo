@@ -4,11 +4,17 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const routes = [{
-        path: '/login',
+        path: '/',
         name: 'Login',
         component: () =>
-            import ('../components/Login.vue')
+            import ('../components/Login')
     },
+	{
+		path: '/register',
+		name: 'Register',
+		component: () =>
+			import ('../components/Register')
+	},
 	// {
 	// 	path: 'register',
 	// 	name: 'Register',
@@ -61,7 +67,13 @@ const routes = [{
         // which is lazy-loaded when the route is visited.
         component: () =>
             import ('../views/About.vue')
-    }
+    },
+	{
+		path: '/HelpNotice',
+		name: 'HelpNotice',
+		component: () =>
+			import('../components/help/notice/HelpNotice')
+	}
 ]
 
 const router = new VueRouter({

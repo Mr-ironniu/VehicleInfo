@@ -10,14 +10,14 @@
 		<div class="search_div">
 			<el-form :inline="true" :model="searchForm" class="demo-form-inline" label-width="100px">
 				<el-row>
-					<el-col :span="7">
+					<!-- <el-col :span="7">
 						<el-form-item label="用户名">
 							<el-input v-model="searchForm.userName"></el-input>
 						</el-form-item>
-					</el-col>
+					</el-col> -->
 					<el-col :span="7">
 						<el-form-item label="内容">
-							<el-input v-model="searchForm.content"></el-input>
+							<el-input v-model="searchForm.seekContent"></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :span="7">
@@ -25,13 +25,6 @@
 							<el-input v-model="searchForm.location"></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :span="3">
-						<el-button-group>
-							<el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
-						</el-button-group>
-					</el-col>
-				</el-row>
-				<el-row>
 					<el-col :span="7">
 						<el-form-item label="状态">
 							<el-select v-model="searchForm.state" clearable placeholder="请选择" style="width: 197px;">
@@ -44,6 +37,15 @@
 							</el-select>
 						</el-form-item>
 					</el-col>
+					<el-col :span="3">
+						<el-button-group>
+							<el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
+						</el-button-group>
+					</el-col>
+					
+				</el-row>
+				<el-row>
+					
 					<el-col :span="7">
 						<el-form-item label="处理人">
 							<el-input v-model="searchForm.handleUserId"></el-input>
@@ -63,7 +65,7 @@
 			<el-table-column prop="userName" label="用户名"></el-table-column>
 			<el-table-column prop="seekcontent" label="求助内容"></el-table-column>
 			<el-table-column prop="location" label="位置"></el-table-column>
-			<el-table-column prop="createTime" label="求助时间"></el-table-column>
+			<el-table-column prop="createtime" label="求助时间"></el-table-column>
 			<el-table-column prop="state" label="状态"></el-table-column>
 			<el-table-column prop="handle" label="处理内容"></el-table-column>
 			<el-table-column prop="handletime" label="处理时间"></el-table-column>
@@ -132,8 +134,11 @@
 			
 			<el-row>
 				<el-col :span="12">
-					<el-form-item label="处理人" prop="handler">
+					<!-- <el-form-item label="处理人" prop="handler">
 						<el-input v-model="helpUserForm.handler" style="width: 21.875rem"></el-input>
+					</el-form-item> -->
+					<el-form-item label="处理时间" prop="handletime">
+						<el-date-picker v-model="helpUserForm.handletime" style="width: 21.875rem" type="datetime"></el-date-picker>
 					</el-form-item>
 				</el-col>
 				<el-col :span="12">
@@ -149,9 +154,7 @@
 					</el-form-item>
 				</el-col>
 			</el-row>
-			<el-form-item label="处理时间" prop="handletime">
-				<el-date-picker v-model="helpUserForm.handletime" style="width: 21.875rem" type="datetime"></el-date-picker>
-			</el-form-item>
+			
 			<el-form-item label="处理内容" prop="handle">
 				<el-input type="textarea" rows="3" v-model="helpUserForm.handle"></el-input>
 			</el-form-item>
@@ -181,9 +184,10 @@ export default {
 		}],
 		helplist: [],
 		queryInfo: {
+			id: null,
 			userId: "",
 			title: "",
-			content: "",
+			seekcontent: "",
 			location: "",
 			state: "",
 			views: "",
@@ -245,7 +249,7 @@ export default {
 		this.initWebSocket();
 	},
 	websocketonmessage(event){ //数据接收
-		
+		this.getHelpList()
 	},
 	websocketsend(Data){//数据发送
 		this.websock.send(Data);
@@ -255,6 +259,7 @@ export default {
 	},
     async getHelpList() {
 		helpDataPost(this.queryInfo).then((res) => {
+			console.log(res)
 			if (res.flag === 1) {
 				res.rows.forEach((item) => {
 					if (item.state === "1") {
@@ -262,6 +267,10 @@ export default {
 					}
 					if (item.state === "2") {
 						item.state = '已处理'
+					}
+					item.createtime = this.getTime(item.createtime)
+					if (item.handletime) {
+						item.handletime = this.getTime(item.handletime)
 					}
 				})
 				this.helplist = res.rows
@@ -278,7 +287,22 @@ export default {
 		var hours = date.getHours();
 		var minu = date.getMinutes();
 		var sec = date.getSeconds();
-		return year+'/'+mon+'/'+day+' '+hours+':'+minu+':'+sec;
+		if (mon < 10) {
+			mon = '0' + mon
+		}
+		if (day < 10) {
+			day = '0' + day
+		}
+		if (hours < 10) {
+			hours = '0' + hours
+		}
+		if (minu < 10) {
+			minu = '0' + minu
+		}
+		if (sec < 10) {
+			sec = '0' + sec
+		}
+		return year+'-'+mon+'-'+day+' '+hours+':'+minu+':'+sec;
 	},
 
 	handleSizeChange(newSize) {

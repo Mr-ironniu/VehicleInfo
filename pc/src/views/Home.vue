@@ -63,7 +63,7 @@
 					</el-col>
 				</el-row>
 				<el-form-item label="求助内容" prop="seekcontent">
-					<el-input v-model="helpUserForm.seekcontent"></el-input>
+					<el-input type="textarea" rows="3" v-model="helpUserForm.seekcontent"></el-input>
 				</el-form-item>
 				<el-form-item label="位置" prop="location">
 					<el-input v-model="helpUserForm.location"></el-input>
@@ -71,8 +71,11 @@
 				
 				<el-row>
 					<el-col :span="12">
-						<el-form-item label="处理人" prop="handler">
+						<!-- <el-form-item label="处理人" prop="handler">
 							<el-input v-model="helpUserForm.handler" style="width: 21.875rem"></el-input>
+						</el-form-item> -->
+						<el-form-item label="处理时间" prop="handletime">
+							<el-date-picker v-model="helpUserForm.handletime" style="width: 21.875rem" type="datetime"></el-date-picker>
 						</el-form-item>
 					</el-col>
 					<el-col :span="12">
@@ -88,9 +91,7 @@
 						</el-form-item>
 					</el-col>
 				</el-row>
-				<el-form-item label="处理时间" prop="handletime">
-					<el-date-picker v-model="helpUserForm.handletime" style="width: 21.875rem" type="datetime"></el-date-picker>
-				</el-form-item>
+				
 				<el-form-item label="处理内容" prop="handle">
 					<el-input type="textarea" rows="3" v-model="helpUserForm.handle"></el-input>
 				</el-form-item>
@@ -100,16 +101,19 @@
 				<el-button type="primary" @click="handleConfirm">确 定</el-button>
 			</span>
 		</el-dialog>
+		<HelpNotice :helpList="helpList" :modal="modal" @closeNotice="closeTip" @showEdit="goHandle"></HelpNotice>
     </el-container>
   </el-container>
 </template>
 
 <script>
-import { userDataPost, helpDataPost, handleDataPost } from '../api/axios.js'
-// import { goHandle } from './goHandle.js'
+import { userDataPost, helpDataPost, handleDataPost, imgDataPost } from '../api/axios.js'
+import HelpNotice from '../components/help/notice/HelpNotice.vue'
 
 export default {
-	
+	components: {
+		'HelpNotice': HelpNotice
+	},
   data() {
     return {
 		menulist: [
@@ -204,7 +208,13 @@ export default {
 		userId: null,
 		queryInfo: {
 			id: null,
-			pageSize: 1,
+			userId: "",
+			title: "",
+			seekcontent: "",
+			location: "",
+			state: "",
+			views: "",
+			pageSize: 10,
 			pageNumber: 1
 		},
 		queryName: "",
@@ -218,7 +228,9 @@ export default {
 			label: '已处理'
 		}],
 		helpList: [],
-		nameList: []
+		nameList: [],
+		arrList: [],
+		modal: false
     };
   },
   methods: {
@@ -232,6 +244,7 @@ export default {
 		// this.timer = setInterval(this.websock.onmessage, 1000)
 	},
 	websocketonopen(){ //连接建立之后执行send方法发送数据
+		console.log('123')
 		// this.websocketsend(JSON.stringify(actions));
 	},
 	websocketonerror(){//连接建立失败重连
@@ -240,9 +253,21 @@ export default {
 	websocketonmessage(event){ //数据接收
 		this.queryInfo.id = event.data
 		helpDataPost(this.queryInfo).then((res) => {
+			let picList = []
+			let arrList = []
 			if (res.flag === 1) {
-				this.queryName = res.rows[0].userName
+				const api = imgDataPost()
+				picList = res.rows[0].pictureList
+				res.rows[0].createtime = this.getTime(res.rows[0].createtime)
+				picList.forEach(item => {
+					item.path = api + item.path
+				})
+				res.rows[0].pictureList = picList
+				this.arrList.push(res.rows[0])
+				this.helpList = this.arrList.reverse()
+				this.modal = true
 				this.helpUserForm = res.rows[0]
+				// console.log(this.helpList)
 			}
 			const h = this.$createElement
 			this.$notify({
@@ -275,11 +300,17 @@ export default {
 	},
 	
 	handleConfirm() {
+		this.helpUserForm.handleUserId = this.userId
 		handleDataPost(this.helpUserForm).then((res) => {
+			this.helpUserForm.handletime = this.getTime(this.helpUserForm.handletime)
 			if (res.flag === 1) {
-				this.helpUserForm = res.obj
+				// console.log(res)
+				var date = new Date(res.obj.handletime)
+				var time = date.getTime()
+				// this.helpUserForm = res.obj
 				let data = this.helpUserForm.userid + ',' + this.helpUserForm.id
 				this.websocketsend(data)
+				this.helpDialogVisible = false
 			}
 		})
 		console.log(this.helpUserForm)
@@ -293,7 +324,22 @@ export default {
 		var hours = date.getHours();
 		var minu = date.getMinutes();
 		var sec = date.getSeconds();
-		return year+'/'+mon+'/'+day+' '+hours+':'+minu+':'+sec;
+		if (mon < 10) {
+			mon = '0' + mon
+		}
+		if (day < 10) {
+			day = '0' + day
+		}
+		if (hours < 10) {
+			hours = '0' + hours
+		}
+		if (minu < 10) {
+			minu = '0' + minu
+		}
+		if (sec < 10) {
+			sec = '0' + sec
+		}
+		return year+'-'+mon+'-'+day+' '+hours+':'+minu+':'+sec;
 	},
 	
 	// 读取cookie
@@ -317,7 +363,7 @@ export default {
 	logout() {
 		window.sessionStorage.clear;
 		this.websock.onclose()
-		this.$router.push("/login");
+		this.$router.push("/");
     },
 	
     toggleCollapse() {
@@ -330,6 +376,9 @@ export default {
 	},
 	helpDialogClosed() {
 		this.helpDialogVisible = false
+	},
+	closeTip() {
+		this.modal = false
 	}
   },
   async created() {

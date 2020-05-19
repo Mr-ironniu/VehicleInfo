@@ -109,7 +109,7 @@ export default {
     },
     methods: {
 		register() {
-			this.show = true
+			this.$router.push('/register')
 		},
 		login() {
 			this.$refs['LoginFormRef'].validate(async (valid) => {
