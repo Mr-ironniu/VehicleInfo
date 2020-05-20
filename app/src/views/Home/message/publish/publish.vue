@@ -9,7 +9,7 @@
             @click-right="onClickRight"/>
         <div class="content">
             <van-field
-                v-model="content"
+                v-model="data.content"
                 @input="handlecontent"
                 rows="4"
                 autosize
@@ -24,6 +24,7 @@
                 name="file"
                 action="http://114.116.242.72:8080/trend/uploadPic.do"
                 list-type="picture-card"
+                :file-list="fileList"
                 :on-preview="handlePictureCardPreview" 
                 :on-remove="handleRemove"
                 :data='Uploaddata'
@@ -50,14 +51,12 @@ export default {
             data:{
                 title:'132',
                 userId:134,
-                content:'',//动态文本内容
-                location:''//所在位置地址信息
+                content:this.$store.state.content,//动态文本内容
+                location:'12312'//所在位置地址信息
             },
-            content: this.$store.state.content, 
             Uploaddata:{
-                trendId:0,
-                sort:0,
-                file:''
+                trendId:null,
+                file:[]
             },//图片对象参数
             fileList:[],
             dialogVisible: false,
@@ -72,43 +71,48 @@ export default {
     },
     methods:{
         handlecontent(){
-            console.log('this.content :>> ', this.content);
-            this.$store.commit('changeContent',this.content)
+            console.log('this.content :>> ', this.data.content);
+            this.$store.commit('changeContent',this.data.content)
+        },
+        clearcontent(){
+            this.data.content = '';
+            this.$store.commit('changeContent',this.data.content)
         },
         //返回
         onClickLeft(){
+            this.clearcontent();
             this.$router.push({
                     name: 'message'
                 }) 
         },
         //发表
         onClickRight(){
-            let that = this;
-            // console.log(that.fileList);            
+            let that = this;     
+            // console.log(that.fileList);      
             const len_pic =  that.fileList.length;
             const len_content = that.data.content.length;  
+            // console.log('len_content :>> ', len_pic);
             if(!len_content){
                 that.$toast.fail("动态内容不能为空")
                 return;
             }else{
-                console.log(12312321);
                 ShareMood(that.data).then(res =>{
                     if(res.msg == '新增动态成功'){       
                         that.Uploaddata.trendId = res.obj.id;                     
                         if(len_pic){
                             for(let i=0;i<len_pic;i++){
-                                setTimeout(()=>{
-                                    that.Uploaddata.sort = i+1;
-                                    that.Uploaddata.file = that.fileList[i].url;                                 
-                                    this.$refs.upload.submit();               
-                                },i*1000)
+                                const obj ={src:''}
+                                obj.src = that.fileList[i].url;
+                                that.Uploaddata.file.push(obj);
                             }
+                        //    console.log(that.Uploaddata);
+                           this.$refs.upload.submit();
+                        } else{
+                            this.clearcontent()
                             this.$toast.success("发表成功")
                             this.$router.push({
                                     name: 'message'
-                                }) 
-                        } else{
-                            console.log(that.fileList);                                           
+                                })                                      
                         }
                     } else{
                         that.$toast.fail(res.msg);
@@ -133,16 +137,19 @@ export default {
         },
         //添加文件、成功失败钩子
         handlechange(file, fileList){
-            // console.log("handlechange",file,fileList);
             this.fileList = fileList;
+            console.log(fileList);
         },
         //上传失败钩子
-        handlesuccess(err, file, fileList){
-            console.log("handlesuccess",err, file, fileList);
+        handlesuccess(){
+            this.clearcontent()
+            this.$toast.success("发表成功")
+            this.$router.push({
+                    name: 'message'
+                })  
         },
-        //上传失败钩子
-        handleerror(response, file, fileList){
-            console.log("handleerror",response, file, fileList);            
+        handleerror(err,file,fileList){
+            console.log("handleerr",err, file, fileList);
         },
         hanlelimit(){
             this.$message.warning(`已达到最大上传照片数`);
@@ -154,9 +161,6 @@ export default {
                         showmap: true 
                     }
                 }) 
-        },
-        afterRead(file){
-            console.log(file);            
         }
     }
     

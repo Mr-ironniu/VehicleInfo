@@ -16,11 +16,9 @@
                         <div class="text-name">{{item.userName}}</div>
                         <div class="text-content">
                             <p>{{item.content}}</p>
-                            <!-- <img style="position:relative;z-index:1001;height:50px;width:50px;" src="../../../assets/feya.jpg" alt=""> -->
+                            <div></div>
                         </div>
                         <div  class="text-pingluicon">
-                            <!-- <van-icon class="text-icon" name="eye-o" />
-                            <div style="height:22px;display:inline-block;line-height:22px;font-size:15px;">{{views}}</div> -->
                             <van-icon class="text-icon" name="ellipsis" />
                         </div>
                         <div style="font-size:10px;color:#969799">
