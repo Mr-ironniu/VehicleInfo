@@ -5,13 +5,20 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex);
 
+
 export default new Vuex.Store({
   state:{
     content:'',
+    obj: ''
   },
   mutations:{
     changeContent (state, content){
-      state.content = content
+      state.content = content;
+    },
+    changeUser(state,obj){
+      state.obj = obj
+      console.log('state :>> ', state.obj);
+      // localStorage.objData = obj
     }
   }
 })

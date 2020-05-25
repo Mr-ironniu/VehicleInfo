@@ -64,7 +64,6 @@ export function trendView(value) {
       "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
     }
   }).then(res => {
-    console.log(res);
       return Promise.resolve(res.data);
     });
 }
@@ -72,7 +71,6 @@ export function trendView(value) {
 // 查询求助信息接口函数
 export function helpDataPost(values) {
 	const url = api + '/seek/select.do';	
-	console.log(values)
 	return axios.get(url,{
 		params: values,
 		headers: {
@@ -86,7 +84,6 @@ export function helpDataPost(values) {
 // 新增求助信息接口函数
 export function helpDataSubmit(values) {
 	const url = api + '/seek/insert.do';	
-	console.log(values)
 	
 	return axios.get(url,{
 		params: values
@@ -100,4 +97,14 @@ export function imgDataPost() {
 	const url = api + '/trend/getPic.do?url=';
 	
 	return url
+}
+
+// 新增评论接口函数
+export function comment(values) {
+	const url = api + '/comment/insert.do';
+	return axios.get(url,{
+		params: values
+	}).then(res => {
+		return Promise.resolve(res.data);
+	});
 }

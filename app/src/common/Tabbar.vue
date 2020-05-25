@@ -1,9 +1,9 @@
 <template>
     <div style="z-index:1001;">
         <van-tabbar route>
-            <van-tabbar-item replace to="/home/map" icon="home-o">
+            <!-- <van-tabbar-item replace to="/home/map" icon="home-o">
                 首页
-            </van-tabbar-item>
+            </van-tabbar-item> -->
             <van-tabbar-item replace to="/home/message" icon="comment-circle-o">
                 动态
             </van-tabbar-item>

@@ -1,5 +1,5 @@
 <template>
-	<div style="padding: 10px;">
+	<div style="padding: 10px; background-color: #FFFFFF;">
 		<el-form
 			:model="helpDetailForm"
 			ref="helpUserFormRef"
@@ -38,6 +38,7 @@
 				<el-button type="primary" @click="backHelp">返回</el-button>
 			</div>	
 		</el-form>
+		<div style="height: 5rem; background-color: #FFFFFF;"></div>
 		<el-dialog
 			title="查看图片"
 			:visible.sync="imgDialogVisible"

@@ -3,13 +3,13 @@
         <div class="header">
             <img src="../../../assets/tx.jpg" alt="">
             <div style="display:inline-block;position:absolute;height:30px;line-height:30px;font-size:20px;font-weight:550;top:15%;left:30%;margin:auto;" >
-                剑姬
+                {{obj.name}}
             </div>
             <div style="display:inline-block;position:absolute;height:30px;line-height:30px;font-size:16px;top:45%;left:30%;margin:auto;" >
-                大众一代
+                {{obj.vehiclebrand+obj.vehicletype}}
             </div>
         </div>
-        <div class="content">当前位置</div>
+        <div class="content" @click="This_location">当前位置</div>
 
         <div class="content" @click="Quit">退出登录</div>
     </div>
@@ -21,8 +21,12 @@ export default {
     data(){
         return{
             data:[],
-            active:''
+            active:'',
+            obj:this.$store.state.obj
         }
+    },
+    mounted(){
+        console.log('this.obj :>> ',this.obj);
     },
     methods:{
         Quit(){
@@ -38,6 +42,11 @@ export default {
             .catch(() => {
                 console.log(123);                
             });
+        },
+        This_location(){
+            this.$router.push({
+                name:'map'
+            })
         }
     }
     

@@ -2,12 +2,19 @@
     <div class="wrapper">
         <div>
             <van-nav-bar
+                v-show="showmap"
                 title="所在位置"
                 left-text="返回"
                 right-text="确定"
                 left-arrow
                 @click-left="onClickLeft"
                 @click-right="onClickRight"/>
+            <van-nav-bar
+                v-show="!showmap"
+                title="所在位置"
+                left-text="返回"
+                left-arrow
+                @click-left="onblack"/>
             <div ref="Mapcontent" class="map"></div>
         </div>
     </div>
@@ -22,7 +29,8 @@ export default {
         return{
             data:[],
             active:'',
-            address:'123'
+            address:'',
+            showmap:false,
         }
     },
     mounted(){
@@ -33,7 +41,7 @@ export default {
             map.style.height = '570px'
         }else{
             this.showmap = false
-            map.style.height = '620px';
+            map.style.height = '570px';
         }
     },
     methods:{
@@ -66,6 +74,11 @@ export default {
                     }
                 });
             });        
+        },
+        onblack(){
+            this.$router.push({
+                    name: 'mine'
+                }) 
         },
         onClickLeft(){
            this.$router.push({

@@ -4,27 +4,34 @@
         <div class="content">
             <div class="touxiang">
                 <div class="touxiang-name">{{ObjData.name}}</div>
-                <img src="../../..//assets/tx.jpg" alt="">
+                <img src="../../../assets/tx.jpg" alt="">
             </div>
             <img  class="header" src="../../../assets/fengmian.jpg" alt="">
             <div class="center">
                 <div class="item" v-for="item in List" :key="item.key">
                     <div class="tx-left">
-                        <img src="../../..//assets/tx.jpg" alt="">
+                        <img src="../../../assets/tx.jpg" alt="">
                     </div>
                     <div class="text-right">
                         <div class="text-name">{{item.userName}}</div>
                         <div class="text-content">
                             <p>{{item.content}}</p>
-                            <div></div>
+                            <el-row>
+                                <el-col :span="8" v-for="(url, index) in item.pictureList" :key="index" :offset="0">
+                                    <el-card :body-style="{ padding: '0px' }">
+                                        <el-image style="padding:0px;" :src="`${apiUrl}${url.path}`" :preview-src-list='item.imgList'  lazy></el-image>
+                                    </el-card>
+                                </el-col>
+                            </el-row>
+                            <p style="font-size:10px;color:#969799">{{item.location}}</p>
                         </div>
                         <div  class="text-pingluicon">
-                            <van-icon class="text-icon" name="ellipsis" />
+                            <van-icon class="text-icon" name="ellipsis" @click="editComment(item.id)" />
                         </div>
-                        <div style="font-size:10px;color:#969799">
-                            {{item.location}}
-                        </div>
-                        <div class="comments" style="display:none">
+                        <div>
+                        <p class="comments" v-for="(q,index) in item.commentList" :key='index'  style="word-wrap:break-word;background-color:#f4f4f4;width:90%;font-size:12px;margin:0;">
+                            <span style="color:#0088CC;">{{q.name + '：'}}</span>{{q.comment}}
+                        </p>
                         </div>
                     </div>
                     <van-divider />
@@ -35,33 +42,44 @@
     <div @click="publish">
         <img class="publish" src="../../../assets/xiangji2.png" alt="">
     </div>
+    <van-action-sheet v-model="isComment"  :round="false" :overlay="true" :safe-area-inset-bottom="false" :close="commentClose" :style="{ height: '10%',margin:'0 0  0 0'}">
+        <div style="background-color:#f4f4f4;height:67px;position:relative"  >
+            <textarea v-model="ObjData.comment" style="width:75%;border:0;margin:12px 10px 6px 10px;border-radius:5px;" name="" id=""  rows="2"></textarea>
+            <van-button  style="position:absolute;top:0;bottom:0;right:10px;margin:auto;heigth:100%" @click="sendComment" text="发表" type="default"></van-button>
+        </div>
+    </van-action-sheet>
 </div>
 </template>
 
 <script>
-// import Bscroll from 'better-scroll';
-import { trendList  } from '../../../api/axios'
+// import Bscroll from 'better-scrollve
+import { trendList,comment } from '../../../api/axios'
 export default {
     name:'message',
     data(){
         return{
             userId:'',
             ObjData:{
-                userId:'',
+                id:'',   
                 name:'',
                 vehiclebrand:'',
                 vehicletype:'',
                 user:'',
                 phone:'',
                 province:'',
-                picList:[]
+                picList:[],
+                comment:'',
+                trendId:''
             },
+            fit: "fill",
             List:[],
+            apiUrl:'http://114.116.242.72:8080/trend/getPic.do?url=',
             views:1,
             trendId:0,
             scroll_top:'',
             active:'',
             name:'',
+            isComment:false,
             scroll
         }
     },
@@ -70,15 +88,44 @@ export default {
     },
     mounted(){
         // this.scroll = new Bscroll(this.$refs.wrapper);
-        this.ObjData = { ...this.$route.params.obj};
+        this.ObjData = { ...this.$store.state.obj};
         this.Gettrend();
     },
     methods:{
+        commentClose(){
+            this.ObjData.comment = ''
+        },
+        //发表评论
+        sendComment(){
+            if(this.ObjData.comment){
+                const data = {
+                    userId: this.ObjData.id,
+                    trendId: this.ObjData.trendId,
+                    comment: this.ObjData.comment
+                }
+                comment(data).then(res =>{
+                    if(res.flag===1){
+                        this.isComment = false;
+                        this.ObjData.comment = '';
+                        this.Gettrend();
+                        return
+                    }
+                })
+            }else{
+                 this.$toast.fail("评论内容不能为空")
+            }
+        },
+        //编辑评论
+        editComment(val){
+            this.isComment = true;
+            this.ObjData.trendId = val;
+        },
         onSubmit(val){
             console.log(val);
         },
         publish(){
-            const userId = this.userId;
+            const userId = this.ObjData.Id;
+            console.log('userId :>> ', userId);
             this.$router.push({
                     name: 'publish',
                     params:{
@@ -88,10 +135,14 @@ export default {
         },
         Gettrend(){
             trendList(this.ObjData.id).then(res =>{
-                this.List = res.rows;  
-                console.log(this.List);
+                this.List = res.rows;
+                for( const key of this.List){
+                    key.imgList = [];
+                    key.pictureList.forEach(element => {
+                        key.imgList.push(this.apiUrl + element.path)
+                    });
+                }
                 
-                // this.AddView();   
             })
         },
         // AddView(){
@@ -209,9 +260,11 @@ export default {
 }
 .text-content{
     width: 90%;
-    padding-top:10px;
     font-size: 14px;
     word-wrap:break-word;
+}
+.text-content p{
+    margin: 5px 0;
 }
 .text-pingluicon{
     position: relative;
@@ -229,4 +282,9 @@ export default {
     text-align: center;
     line-height: 13px;
 }
+.image {
+    width: 75px;
+    height:75px;
+    display: block;
+  }
 </style>

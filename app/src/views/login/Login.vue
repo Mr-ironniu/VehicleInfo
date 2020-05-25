@@ -58,12 +58,13 @@ export default {
         if(res.msg == '登录成功'){
 			this.setCookie(res.obj)
           this.$toast.success("登录成功")
+          this.$store.commit('changeUser',res.obj);
           this.$router.push({
-                    name: 'message',
-                    params: {
-                      obj: res.obj
-                    }
-                }) 
+                  name: 'message',
+                  params: {
+                    obj: res.obj
+                  }
+              })
         } else{
           this.$toast.fail(res.msg);
         }        

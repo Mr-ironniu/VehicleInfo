@@ -52,7 +52,7 @@ export default {
                 title:'132',
                 userId:134,
                 content:this.$store.state.content,//动态文本内容
-                location:'12312'//所在位置地址信息
+                location:''//所在位置地址信息
             },
             Uploaddata:{
                 trendId:null,
@@ -71,7 +71,6 @@ export default {
     },
     methods:{
         handlecontent(){
-            console.log('this.content :>> ', this.data.content);
             this.$store.commit('changeContent',this.data.content)
         },
         clearcontent(){
@@ -88,12 +87,15 @@ export default {
         //发表
         onClickRight(){
             let that = this;     
-            // console.log(that.fileList);      
             const len_pic =  that.fileList.length;
-            const len_content = that.data.content.length;  
-            // console.log('len_content :>> ', len_pic);
+            const len_content = that.data.content.length;
+            console.log('this.data.location.length :>> ', this.data.location.length);  
             if(!len_content){
                 that.$toast.fail("动态内容不能为空")
+                return;
+            }
+            else if(!this.data.location.length){
+                that.$toast.fail("位置信息不能为空")
                 return;
             }else{
                 ShareMood(that.data).then(res =>{
@@ -105,7 +107,6 @@ export default {
                                 obj.src = that.fileList[i].url;
                                 that.Uploaddata.file.push(obj);
                             }
-                        //    console.log(that.Uploaddata);
                            this.$refs.upload.submit();
                         } else{
                             this.clearcontent()
