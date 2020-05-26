@@ -8,7 +8,7 @@
             </div>
             <img  class="header" src="../../../assets/fengmian.jpg" alt="">
             <div class="center">
-                <div class="item" v-for="item in List" :key="item.key">
+                <div class="item" v-for="item in List" :key="item.key" v-show="item.state == 1 ? true : false">
                     <div class="tx-left">
                         <img src="../../../assets/tx.jpg" alt="">
                     </div>
@@ -44,21 +44,20 @@
     </div>
     <van-action-sheet v-model="isComment"  :round="false" :overlay="true" :safe-area-inset-bottom="false" :close="commentClose" :style="{ height: '10%',margin:'0 0  0 0'}">
         <div style="background-color:#f4f4f4;height:67px;position:relative"  >
-            <textarea v-model="ObjData.comment" style="width:75%;border:0;margin:12px 10px 6px 10px;border-radius:5px;" name="" id=""  rows="2"></textarea>
-            <van-button  style="position:absolute;top:0;bottom:0;right:10px;margin:auto;heigth:100%" @click="sendComment" text="发表" type="default"></van-button>
+            <textarea v-model="ObjData.comment" style="width:75%;border:0;margin:18px 10px 1px 10px;border-radius:5px;height:37px" name="" id=""  rows="1"></textarea>
+            <van-button  style="position:absolute;top:5px;bottom:0;right:10px;margin:auto;heigth:100%;border-radius:4px;" @click="sendComment" text="发表" type="primary"></van-button>
         </div>
     </van-action-sheet>
 </div>
 </template>
 
 <script>
-// import Bscroll from 'better-scrollve
+// import Bscroll from 'better-scroll'
 import { trendList,comment } from '../../../api/axios'
 export default {
     name:'message',
     data(){
         return{
-            userId:'',
             ObjData:{
                 id:'',   
                 name:'',
@@ -83,9 +82,11 @@ export default {
             scroll
         }
     },
-    computed:{
-    
-    },
+    // watch:{
+    //     ObjData.comment: function(val){
+
+    //     }
+    // },
     mounted(){
         // this.scroll = new Bscroll(this.$refs.wrapper);
         this.ObjData = { ...this.$store.state.obj};
@@ -129,8 +130,10 @@ export default {
                 })   
         },
         Gettrend(){
-            trendList(this.ObjData.id).then(res =>{
+            const pageSize = 500;
+            trendList({ ...this.ObjData.id,pageSize}).then(res =>{
                 this.List = res.rows;
+                console.log('this.List :>> ', this.List);
                 for( const key of this.List){
                     key.imgList = [];
                     key.pictureList.forEach(element => {
@@ -140,17 +143,6 @@ export default {
                 
             })
         },
-        // AddView(){
-        //     for(let i=0;i<this.List.length;i++){  
-        //         setTimeout(()=>{
-        //             console.log(i);                    
-        //             trendView(this.List[i].id).then(res =>{
-        //                 console.log(res);                
-        //             }); 
-        //         },i*1000)                
-                           
-        //     }
-        // },
         afterRead(file){
             console.log(file);            
         }
@@ -198,8 +190,10 @@ export default {
     font-weight: 550;
     color:#fff;
     position: absolute;
+    top:10px;
     padding-right: 65px;
-    /* width: 100%; */
+    text-align:right;
+    width: 300px;
     right:1000%;
     z-index: 1001;
 }
