@@ -4,12 +4,15 @@ import Vuex from 'vuex'
 // import mutations from './mutations'
 
 Vue.use(Vuex);
+let defaultObj = '';
+defaultObj = sessionStorage.getItem("USER");
 
+console.log('sessionStorage.USER :>> ', );
 
 export default new Vuex.Store({
   state:{
     content:'',
-    obj: ''
+    obj: JSON.parse(defaultObj) 
   },
   mutations:{
     changeContent (state, content){
@@ -18,7 +21,6 @@ export default new Vuex.Store({
     changeUser(state,obj){
       state.obj = obj
       console.log('state :>> ', state.obj);
-      // localStorage.objData = obj
     }
   }
 })

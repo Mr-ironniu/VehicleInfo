@@ -53,11 +53,11 @@ export default {
         forbidClick: true,
       })
       UserLogin(value).then(res =>{
-		console.log(value)
         this.$toast.clear();
         if(res.msg == '登录成功'){
-			this.setCookie(res.obj)
+      this.setCookie(res.obj)
           this.$toast.success("登录成功")
+          sessionStorage.setItem("USER",JSON.stringify(res.obj));
           this.$store.commit('changeUser',res.obj);
           this.$router.push({
                   name: 'message',

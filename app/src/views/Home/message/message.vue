@@ -124,13 +124,8 @@ export default {
             console.log(val);
         },
         publish(){
-            const userId = this.ObjData.Id;
-            console.log('userId :>> ', userId);
             this.$router.push({
                     name: 'publish',
-                    params:{
-                        userId: userId
-                    }
                 })   
         },
         Gettrend(){
@@ -204,6 +199,7 @@ export default {
     color:#fff;
     position: absolute;
     padding-right: 65px;
+    /* width: 100%; */
     right:1000%;
     z-index: 1001;
 }

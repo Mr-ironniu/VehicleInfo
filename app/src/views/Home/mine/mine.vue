@@ -22,7 +22,11 @@ export default {
         return{
             data:[],
             active:'',
-            obj:this.$store.state.obj
+            obj:{
+                name:this.$store.state.obj.name,
+                vehiclebrand:this.$store.state.obj.vehiclebrand,
+                vehicletype:this.$store.state.obj.vehicletype
+            }
         }
     },
     mounted(){

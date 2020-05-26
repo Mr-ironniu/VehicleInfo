@@ -49,8 +49,7 @@ export default {
     data(){
         return{  
             data:{
-                title:'132',
-                userId:134,
+                userId:this.$store.state.obj.id,
                 content:this.$store.state.content,//动态文本内容
                 location:''//所在位置地址信息
             },
@@ -67,7 +66,6 @@ export default {
     },
     mounted(){
         this.getdata()
-        if(!this.data.userId)this.data.userId = this.$route.params.userId;
     },
     methods:{
         handlecontent(){
@@ -94,7 +92,7 @@ export default {
                 that.$toast.fail("动态内容不能为空")
                 return;
             }
-            else if(!this.data.location.length){
+            else if(!that.data.location.length){
                 that.$toast.fail("位置信息不能为空")
                 return;
             }else{
@@ -107,11 +105,11 @@ export default {
                                 obj.src = that.fileList[i].url;
                                 that.Uploaddata.file.push(obj);
                             }
-                           this.$refs.upload.submit();
+                           that.$refs.upload.submit();
                         } else{
-                            this.clearcontent()
-                            this.$toast.success("发表成功")
-                            this.$router.push({
+                            that.clearcontent()
+                            that.$toast.success("发表成功")
+                            that.$router.push({
                                     name: 'message'
                                 })                                      
                         }
