@@ -76,13 +76,18 @@
 </template>
 
 <script>
-import { editUserData } from '../../api/axios.js'
+import { editUserData, userDataPost } from '../../api/axios.js'
 
 export default {
   data() {
     return {
 		personalForm: {},
-		edit: true
+		edit: true,
+		queryInfo: {
+			type: "2",
+			pageSize: 10,
+			pageNumber: 1
+		},
     };
   },
   methods: {
@@ -109,15 +114,21 @@ export default {
 				var arr2 = arr[i].split('=') // 再次切割
 				// 判断查找相对应的值
 				if (arr2[0] === 'data') {
-					this.personalForm = JSON.parse(arr2[1])
+					let info = JSON.parse(arr2[1])
+					this.queryInfo.id = info.id
+					userDataPost(this.queryInfo).then((res) => {
+						this.personalForm = res.rows[0]
+						if (this.personalForm.type === '1') {
+							this.personalForm.type = '普通用户'
+						}
+						if (this.personalForm.type === '2') {
+							this.personalForm.type = '管理员'
+						}
+					})
+					
+					// this.personalForm = JSON.parse(arr2[1])
 					break
 				}
-			}
-			if (this.personalForm.type === '1') {
-				this.personalForm.type = '普通用户'
-			}
-			if (this.personalForm.type === '2') {
-				this.personalForm.type = '管理员'
 			}
 		}
 	},
@@ -135,7 +146,7 @@ export default {
 					this.$message.success('修改成功')
 					this.setCookie(res.obj)
 				} else {
-					this.$message.success('修改失败')
+					this.$message.error('修改失败')
 				}
 			})
 		} else {
