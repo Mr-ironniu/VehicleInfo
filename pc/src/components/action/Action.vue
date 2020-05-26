@@ -237,6 +237,15 @@ export default {
 	},
 	search() {
 		actionDataPost(this.searchForm).then((res) => {
+			res.rows.forEach((item) => {
+				item.createtime = this.getTime(item.createtime)
+				if (item.state === "1") {
+					item.state = "正常"
+				}
+				if (item.state === "2") {
+					item.state = "封禁"
+				}
+			})
 			this.actionlist = res.rows
 			this.total = res.total
 		})

@@ -6,7 +6,7 @@
       <el-breadcrumb-item>求助信息</el-breadcrumb-item>
     </el-breadcrumb>
 
-	<el-card style="height: 160px;">
+	<el-card style="height: 90px;">
 		<div class="search_div">
 			<el-form :inline="true" :model="searchForm" class="demo-form-inline" label-width="100px">
 				<el-row>
@@ -44,14 +44,14 @@
 					</el-col>
 					
 				</el-row>
-				<el-row>
+				<!-- <el-row>
 					
 					<el-col :span="7">
 						<el-form-item label="处理人">
 							<el-input v-model="searchForm.handleUserId"></el-input>
 						</el-form-item>
 					</el-col>
-				</el-row>
+				</el-row> -->
 			</el-form>
 		</div>
 	</el-card>
@@ -79,7 +79,7 @@
 			<el-table-column prop="state" label="状态"></el-table-column>
 			<el-table-column prop="handle" label="处理内容"></el-table-column>
 			<el-table-column prop="handletime" label="处理时间"></el-table-column>
-			<el-table-column prop="handler" label="处理人"></el-table-column>
+			<!-- <el-table-column prop="handler" label="处理人"></el-table-column> -->
 			<el-table-column label="操作">
 				<template v-slot="scope">
 					<!-- 处理求助 -->
@@ -429,6 +429,10 @@ export default {
 					}
 					if (item.state === "2") {
 						item.state = '已处理'
+					}
+					item.createtime = this.getTime(item.createtime)
+					if (item.handletime) {
+						item.handletime = this.getTime(item.handletime)
 					}
 				})
 				this.helplist = res.rows
