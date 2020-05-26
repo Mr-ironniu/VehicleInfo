@@ -45,7 +45,7 @@
 			<el-table-column prop="userName" label="用户名"></el-table-column>
 			<el-table-column prop="title" label="标题"></el-table-column>
 			<el-table-column prop="content" label="内容"></el-table-column>
-			<el-table-column label="图片">
+			<el-table-column label="图片" width="160">
 					<template v-slot="scope">
 						<!-- 查看图片-->
 						<el-button
@@ -55,7 +55,7 @@
 						>查看图片</el-button>
 					</template>
 			</el-table-column>
-			<el-table-column prop="views" label="浏览数"></el-table-column>
+			<!-- <el-table-column prop="views" label="浏览数" width="150"></el-table-column> -->
 			<el-table-column prop="location" label="定位"></el-table-column>
 			<el-table-column prop="state" label="状态"></el-table-column>
 			<el-table-column prop="createtime" label="发布时间"></el-table-column>
@@ -73,6 +73,13 @@
 						type="info"
 						@click="banAction(scope.row)"
 						icon="el-icon-remove"
+						size="mini"
+					></el-button>
+					<!-- 解除封禁 -->
+					<el-button
+						type="primary"
+						@click="freeAction(scope.row)"
+						icon="el-icon-view"
 						size="mini"
 					></el-button>
 				</template>
@@ -135,7 +142,7 @@ export default {
 			title: "",
 			content: "",
 			location: "",
-			state: "2"
+			state: ""
 		},
 		imgDialogVisible: false,
 		imgList: [],
@@ -147,6 +154,7 @@ export default {
 		actionDataPost(this.queryInfo).then((res) => {
 			if (res.flag === 1) {
 				res.rows.forEach((item) => {
+					// item.views = parseInt(Math.random() * 100000)
 					item.createtime = this.getTime(item.createtime)
 					if (item.state === "1") {
 						item.state = "正常"
@@ -251,18 +259,56 @@ export default {
 		})
 	},
 	banAction(obj) {
-		this.banInfo.id = obj.id
-		this.banInfo.title = obj.title
-		this.banInfo.content = obj.content
-		this.banInfo.location = obj.location
-		banActionData(this.banInfo).then((res) => {
-			if (res.flag === 1) {
-				this.$message.success('封禁成功')
-			} else {
-				this.$message.error('封禁失败')
-			}
-			this.getActionList()
-		})
+		this.$confirm("此操作将封禁该动态, 是否继续?", "提示", {
+			confirmButtonText: "确定",
+			cancelButtonText: "取消",
+			type: "warning"
+		}).then(async () => {
+			this.banInfo.id = obj.id
+			this.banInfo.title = obj.title
+			this.banInfo.content = obj.content
+			this.banInfo.location = obj.location
+			this.banInfo.state = "2"
+			banActionData(this.banInfo).then((res) => {
+				if (res.flag === 1) {
+					this.$message.success('封禁成功')
+				} else {
+					this.$message.error('封禁失败')
+				}
+				this.getActionList()
+			})
+		}).catch(() => {
+				this.$message({
+					type: "info",
+					message: "已取消封禁"
+				});
+		});
+	},
+	freeAction(obj) {
+		this.$confirm("此操作将解封该动态, 是否继续?", "提示", {
+			confirmButtonText: "确定",
+			cancelButtonText: "取消",
+			type: "warning"
+		}).then(async () => {
+			this.banInfo.id = obj.id
+			this.banInfo.title = obj.title
+			this.banInfo.content = obj.content
+			this.banInfo.location = obj.location
+			this.banInfo.state = "1"
+			banActionData(this.banInfo).then((res) => {
+				if (res.flag === 1) {
+					this.$message.success('解封成功')
+				} else {
+					this.$message.error('解封失败')
+				}
+				this.getActionList()
+			})
+		}).catch(() => {
+				this.$message({
+					type: "info",
+					message: "已取消解封"
+				});
+		});
 	},
 	checkImg(obj) {
 		const apiUrl = imgDataPost()
