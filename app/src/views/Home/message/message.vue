@@ -52,7 +52,7 @@
 </template>
 
 <script>
-// import Bscroll from 'better-scroll'
+import Bscroll from 'better-scroll'
 import { trendList,comment } from '../../../api/axios'
 export default {
     name:'message',
@@ -88,9 +88,34 @@ export default {
     //     }
     // },
     mounted(){
-        // this.scroll = new Bscroll(this.$refs.wrapper);
-        this.ObjData = { ...this.$store.state.obj};
         this.Gettrend();
+        this.$nextTick(()=>{
+            const options = {
+                click:true,
+                tap:true,
+                pullDownRefresh: {
+                    threshold: 50,
+                    probeType: 3
+                },
+            }
+            this.scroll = new Bscroll(this.$refs.wrapper,options);
+            if(!this.scroll){
+                return 
+            }else{
+                this.scroll.on('pullingDown', () => {
+                    this.Gettrend()
+                    this.$nextTick(() => {
+                        this.scroll.refresh() // DOM 结构发生变化后，重新初始化BScroll
+                    })
+                    this.scroll.finishPullDown()
+                })
+                this.scroll.on('finishPullDown', () => {
+                    this.$toast.success('刷新成功')
+                })
+            }
+            
+        })
+        this.ObjData = { ...this.$store.state.obj};
     },
     methods:{
         commentClose(){
@@ -132,8 +157,7 @@ export default {
         Gettrend(){
             const pageSize = 500;
             trendList({ ...this.ObjData.id,pageSize}).then(res =>{
-                this.List = res.rows;
-                console.log('this.List :>> ', this.List);
+                 this.List = res.rows;
                 for( const key of this.List){
                     key.imgList = [];
                     key.pictureList.forEach(element => {
