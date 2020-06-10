@@ -22,7 +22,7 @@
                 :limit="9"
                 ref="upload"
                 name="file"
-                action="http://114.116.242.72:8080/trend/uploadPic.do"
+                action="localhost:8082/trend/uploadPic.do"
                 list-type="picture-card"
                 :file-list="fileList"
                 :on-preview="handlePictureCardPreview" 

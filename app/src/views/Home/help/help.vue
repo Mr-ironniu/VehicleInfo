@@ -40,7 +40,7 @@
 							<el-upload
 								class="upload-demo"
 								ref="upload"
-								action="http://114.116.242.72:8080/trend/uploadPic.do"
+								action="localhost:8082/trend/uploadPic.do"
 								:data="uploadData"
 								:file-list="fileList"
 								:on-success="uploadSuccess"

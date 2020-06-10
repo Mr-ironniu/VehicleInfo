@@ -72,7 +72,7 @@ export default {
             },
             fit: "fill",
             List:[],
-            apiUrl:'http://114.116.242.72:8080/trend/getPic.do?url=',
+            apiUrl:'localhost:8082/trend/getPic.do?url=',
             views:1,
             trendId:0,
             scroll_top:'',

@@ -1,7 +1,7 @@
 import axios from "axios";
 // import qs from "qs";
 
-const api = 'http://114.116.242.72:8080'
+const api = 'localhost:8082'
 
 // 登录接口函数
 export function UserLogin(value) {
