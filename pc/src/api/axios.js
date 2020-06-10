@@ -2,7 +2,7 @@ import axios from "axios";
 import qs from "qs";
 import $ from 'jquery'
 
-const api = 'http://114.116.242.72:8080'
+const api = 'localhost:8082'
 
 //用户信息查询接口函数
 export function userDataPost(userInfo) {
